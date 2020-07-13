@@ -11,5 +11,11 @@ public class Hookable : MonoBehaviour
     void Start()
     {
         GetComponent<Rigidbody>().velocity = Random.onUnitSphere * (Random.Range(minPush, maxPush) * 2);
+        
+    }
+
+    private void Update()
+    {
+        transform.Rotate(0, 0, 6 * Random.Range(0.6f,0.9f) * 10 * Time.deltaTime);
     }
 }
