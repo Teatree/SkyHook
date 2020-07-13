@@ -126,5 +126,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidB: {fileID: 1542244674789646394}
-  minPush: 0.1
-  maxPush: 0.4
+  minPush: 0
+  maxPush: 0
