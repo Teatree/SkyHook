@@ -18,6 +18,7 @@ public class PlayerBehaviour : MonoBehaviour
     string state;
     float timer = 0;
 
+    Vector3 orbitPoint;
     Vector3 OldPositionSaved;
 
     void Start()
@@ -33,6 +34,7 @@ public class PlayerBehaviour : MonoBehaviour
         if (state == "launched")
         {
             cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, transform.position.y + 10, cam.transform.position.z), 0.1f);
+            transform.Translate(-Vector3.forward * rotSpeed * 10 * Time.deltaTime, Space.Self);
         }
 
         if (state == "orbit")
@@ -48,28 +50,30 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Rotate()
     {
-        timer += Time.deltaTime * rotSpeed;
+        //timer += Time.deltaTime * rotSpeed;
 
-        float x = -Mathf.Cos(timer) * xSpread;
-        float y = Mathf.Sin(timer) * ySpread;
-        Vector3 pos = new Vector3(x, y, zOffset);
-        Vector3 newPost = pos + Target.transform.position;
-        transform.position = Vector3.Slerp(transform.position, newPost, 0.02f);
+        //float x = -Mathf.Cos(timer) * xSpread;
+        //float y = Mathf.Sin(timer) * ySpread;
+        //Vector3 pos = new Vector3(x, y, zOffset);
+
+        //Vector3 newPos = pos + Target.transform.position;
+
+        ////float dist = Vector3.Distance(newPos, Target.transform.position);
+        //Vector3 lookDir = Target.transform.position - transform.position;
+        //Vector3 finalPoint = lookDir + lookDir.normalized * xSpread;
+        //orbitPoint = transform.position + finalPoint;
+
+        //transform.position = Vector3.Slerp(transform.position, newPos, 0.02f);
+
+
+        transform.RotateAround(Target.transform.position, Vector3.forward, rotSpeed);
 
         transform.LookAt(Target.transform);
-
-        //Vector3 dir = new Vector3(Target.transform.position.x, transform.position.y, Target.transform.position.z);
-        ////transform.rotation = Quaternion.LookRotation(dir - transform.position, Vector3.up);
-
-        //transform.LookAt(dir);
-    
-        ////transform.eulerAngles = new Vector3(transform.eulerAngles.x, -90, transform.eulerAngles.z);
     }
 
     void OnTap()
     {
         launchCoolDown--;
-        //Debug.Log("launchCoolDown: " + launchCoolDown);
 
         if (Input.GetMouseButton(0) && state == "orbit" && launchCoolDown <= 0)
         {
@@ -82,27 +86,11 @@ public class PlayerBehaviour : MonoBehaviour
             Target = null;
 
             state = "launched";
-
-            // push
-            var look = OldPositionSaved - transform.position;
-            var distance = look.magnitude;
-            var dir = look / distance;
-            var velocity = (transform.position - OldPositionSaved) / Time.deltaTime;
-
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, Mathf.Abs(transform.eulerAngles.y), transform.eulerAngles.z);
-            transform.gameObject.GetComponent<Rigidbody>().AddRelativeForce(-dir * velocity.magnitude * 100);
-
-            Debug.Log("force: " + -dir * velocity.magnitude * 100);
         }
 
         else if (Input.GetMouseButtonUp(0) && Target != null && state == "launched")
         {
             state = "orbit";
-            transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-
-            //cam.transform.position = new Vector3(Target.transform.position.x, Target.transform.position.y + 10, cam.transform.position.z);
-
             launchCoolDown = 250;
         }
     }
@@ -113,5 +101,12 @@ public class PlayerBehaviour : MonoBehaviour
         {
             Target = target;
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        // Draw a yellow sphere at the transform's position
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawSphere(orbitPoint, 0.4f);
     }
 }
