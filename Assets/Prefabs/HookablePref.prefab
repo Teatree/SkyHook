@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6185153252050221210}
   - component: {fileID: 7066222976860175574}
   - component: {fileID: 173286125834162414}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Plane (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,6 +117,7 @@ Transform:
   - {fileID: 6518670467474516819}
   - {fileID: 6185153252050221210}
   - {fileID: 6722976347849774443}
+  - {fileID: 6197365018051056762}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -213,6 +214,7 @@ MonoBehaviour:
   rigidB: {fileID: 1542244674789646394}
   minPush: 0
   maxPush: 0
+  spinnerSpinSpeed: 15
 --- !u!1 &3427729150255027900
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,7 +226,7 @@ GameObject:
   - component: {fileID: 6518670467474516819}
   - component: {fileID: 1727761415083761583}
   - component: {fileID: 4028707641131614876}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Plane (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,7 +307,7 @@ GameObject:
   - component: {fileID: 2159906622009786471}
   - component: {fileID: 3703368603938408161}
   - component: {fileID: 8034450381136303330}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Plane (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +388,7 @@ GameObject:
   - component: {fileID: 6722976347849774443}
   - component: {fileID: 33234949222028949}
   - component: {fileID: 2669733138166685411}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -456,3 +458,97 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1001 &365025553537660549
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1542244674789646392}
+    m_Modifications:
+    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_FarClipPlane
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_FieldOfView
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_Orthographic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_OrthographicSize
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 633306a0ded40fe4c926503d6826ce30, type: 2}
+    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_IgnoreLayers.m_Bits
+      value: 1536
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_NearClipPlane
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949608222431, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_Name
+      value: SpinnerShadowProjector
+      objectReference: {fileID: 0}
+    - target: {fileID: 5985743949608222431, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+--- !u!4 &6197365018051056762 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
+  m_PrefabInstance: {fileID: 365025553537660549}
+  m_PrefabAsset: {fileID: 0}

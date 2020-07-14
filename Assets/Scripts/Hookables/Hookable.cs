@@ -8,6 +8,8 @@ public class Hookable : MonoBehaviour
     public float minPush = 0.1f;
     public float maxPush = 0.4f;
 
+    public float spinnerSpinSpeed;
+
     void Start()
     {
         GetComponent<Rigidbody>().velocity = Random.onUnitSphere * (Random.Range(minPush, maxPush) * 2);
@@ -16,6 +18,7 @@ public class Hookable : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(0, 0, 6 * Random.Range(0.6f,0.9f) * 10 * Time.deltaTime);
+        transform.Rotate(0, 0, spinnerSpinSpeed * Time.deltaTime);
+
     }
 }

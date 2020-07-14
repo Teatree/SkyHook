@@ -58,7 +58,10 @@ public class WorldBuilder : MonoBehaviour
                 if (i < toBeInstantiated.Count)
                 {
                     toBeRelocated[i].transform.position = toBeInstantiated[i];
+                    toBeRelocated[i].GetComponent<Hookable>().spinnerSpinSpeed += 50;
                     usedLocations.Add(toBeInstantiated[i]);
+
+
                 }
             }
         }
@@ -107,6 +110,8 @@ public class WorldBuilder : MonoBehaviour
             {
                 GameObject t = Instantiate(hookablePref, transform);
                 t.transform.position = v;
+
+                t.GetComponent<Hookable>().spinnerSpinSpeed = 15;
 
                 hookables.Add(t);
                 usedLocations.Add(v);

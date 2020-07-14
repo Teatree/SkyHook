@@ -20,6 +20,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     string state;
     float timer = 0;
+    bool isClockwise;
 
     Vector3 orbitPoint;
     Vector3 OldPositionSaved;
@@ -36,8 +37,10 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         if (state == "launched")
         {
+            // Move Player
             cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, transform.position.y + 10, cam.transform.position.z), 0.1f);
             transform.Translate(-Vector3.forward * rotSpeed * 10 * Time.deltaTime, Space.Self);
+            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         }
 
         if (state == "orbit")
@@ -50,11 +53,28 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         OnTap();
 
         OldPositionSaved = transform.position;
+
+        if (Target != null)
+        {
+            Vector3 v = Target.transform.InverseTransformPoint(transform.position);
+            Vector3 head = v - transform.localPosition;
+            var dis = v.magnitude;
+            Vector3 dir = head / dis;
+
+            Vector3 distance = Target.transform.position - transform.position;
+            Vector3 relativePosition = Vector3.zero;
+            relativePosition.x = Vector3.Dot(distance, transform.right.normalized);
+            relativePosition.y = Vector3.Dot(distance, transform.up.normalized);
+            relativePosition.z = Vector3.Dot(distance, transform.forward.normalized);
+
+            //Debug.Log("local pos: " + relativePosition);
+        }
     }
 
     void Rotate()
     {
-        transform.RotateAround(Target.transform.position, Vector3.forward, rotSpeed);
+        if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.forward, rotSpeed);
+        else transform.RotateAround(Target.transform.position, -Vector3.forward, rotSpeed);
 
         transform.LookAt(Target.transform);
     }
@@ -110,6 +130,17 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         launchCoolDown = 10;
         rotSpeed += speedIncrement;
+
+        Vector3 distance = Target.transform.position - transform.position;
+        Vector3 relativePosition = Vector3.zero;
+        relativePosition.x = Vector3.Dot(distance, transform.right.normalized);
+        relativePosition.y = Vector3.Dot(distance, transform.up.normalized);
+        relativePosition.z = Vector3.Dot(distance, transform.forward.normalized);
+
+        Debug.Log("CAUGHT local pos: " + relativePosition);
+        Debug.Log("distance: " + distance);
+
+        isClockwise = relativePosition.y * distance.x > 0;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -119,6 +150,11 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         state = "dead";
         gameObject.SetActive(false);
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        Target = null;
     }
 
     public Vector3 GetPosition()
