@@ -49,6 +49,10 @@ public class CubeMover : MonoBehaviour
     {
         updatePositionOnMove();
 
+        //this.transform.Translate(300, 0, 0);
+
+        this.transform.position = Vector3.Lerp(transform.position, new Vector3(500, this.transform.position.y, this.transform.position.z), 0.002f);
+
         if (Input.GetKey("up"))
         {
             this.transform.Translate(0, 0, 2);

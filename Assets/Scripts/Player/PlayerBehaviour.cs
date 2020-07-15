@@ -18,22 +18,27 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public float xSpread;
     public float ySpread;
     public float zOffset;
+    public bool IsHooked;
     public int launchCoolDown;
 
     public float rotSpeed;
 
     string state;
     float timer = 0;
+    float hookTravelCounter = 0;
     bool isClockwise;
 
     Vector3 orbitPoint;
     Vector3 OldPositionSaved;
     Vector3 relativePosition;
+    IEnumerator hookSendCouroutine;
 
     void Start()
     {
         state = "orbit";
-        cam.transform.position = new Vector3(Target.transform.position.x, Target.transform.position.y + 10, cam.transform.position.z);
+        cam.transform.position = new Vector3(Target.transform.position.x, cam.transform.position.y, Target.transform.position.z+10);
+
+        
     }
 
     void Update()
@@ -43,46 +48,27 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         if (state == "launched")
         {
             // Move Player
-            cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, transform.position.y + 10, cam.transform.position.z), 0.02f);
+            cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, cam.transform.position.y, transform.position.z + 10), 0.06f);
             transform.Translate(-Vector3.forward * rotSpeed * 10 * Time.deltaTime, Space.Self);
-            transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+            transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         }
 
         if (state == "orbit")
         {
             Rotate();
             RenderHookLineOrbit();
-            cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(Target.transform.position.x, Target.transform.position.y + 10, cam.transform.position.z), 0.02f);
+            cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(Target.transform.position.x, cam.transform.position.y, Target.transform.position.z + 10), 0.02f);
         }
 
         OnTap();
 
         OldPositionSaved = transform.position;
-
-        if (Target != null)
-        {
-            //Vector3 velocity = (transform.position - OldPositionSaved) / Time.deltaTime;
-            //Vector3 dir = Target.transform.position - transform.position;
-
-            //relativePosition = Vector3.zero;
-            //relativePosition.x = Vector3.Dot(dir, transform.right.normalized);
-            //relativePosition.y = Vector3.Dot(dir, transform.up.normalized);
-            //relativePosition.z = Vector3.Dot(dir, transform.forward.normalized);
-
-            //Vector3 cross = Vector3.zero;
-            
-            //cross = Vector3.Cross(dir, transform.position);
-
-            //relativePosition = cross;
-            //Debug.Log("rel pos (DOT): " + relativePosition);
-            //Debug.Log("rel pos (CROSS): " + cross);
-        }
     }
 
     void Rotate()
     {
-        if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.forward, rotSpeed);
-        else transform.RotateAround(Target.transform.position, -Vector3.forward, rotSpeed);
+        if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.up, rotSpeed);
+        else transform.RotateAround(Target.transform.position, -Vector3.up, rotSpeed);
 
         transform.LookAt(Target.transform);
     }
@@ -103,8 +89,36 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         else if (Input.GetMouseButtonUp(0) && Target != null && state == "launched")
         {
-            SwitchToOrbit();
+            Debug.Log("all good!");
+
+            DetermineIfClockwise();
+
+            hookLine.gameObject.SetActive(true);
+            hookSendCouroutine = SendHook(0.4f); // Needs to be an actual hook value
+            StartCoroutine(hookSendCouroutine);
+            
+            //SwitchToOrbit();
         }
+    }
+
+    IEnumerator SendHook(float hookSpeed) {
+        while (hookTravelCounter < hookSpeed) {
+
+            hookTravelCounter += Time.deltaTime / hookSpeed;
+            Debug.Log("sending hook couroutine");
+
+            hookLine.SetPosition(0, transform.position);
+
+            //somewhere here we will also need to figure out interseption course for moving hookables
+
+            Vector3 newTargetPos = Vector3.Lerp(transform.position, Target.transform.position, hookTravelCounter);
+
+            hookLine.SetPosition(1, newTargetPos);
+
+            yield return null;
+        }
+        SwitchToOrbit();
+        hookTravelCounter = 0;
     }
 
     public void SetTarget(GameObject target)
@@ -136,17 +150,22 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public void SwitchToOrbit()
     {
         state = "orbit";
-        hookLine.gameObject.SetActive(true);
 
         launchCoolDown = 10;
         rotSpeed += speedIncrement;
 
+        //DetermineIfClockwise();
+    }
+
+    private void DetermineIfClockwise()
+    {
         Vector3 velocity = (transform.position - OldPositionSaved) / Time.deltaTime;
         Vector3 dir = Target.transform.position - transform.position;
 
         relativePosition = Vector3.Cross(velocity, dir);
+        //Debug.Log(relativePosition);
 
-        isClockwise = relativePosition.z >= 0;
+        isClockwise = relativePosition.y >= 0;
     }
 
     public void CollisionEnter()

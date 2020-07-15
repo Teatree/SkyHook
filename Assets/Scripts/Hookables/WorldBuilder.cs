@@ -7,8 +7,8 @@ public class WorldBuilder : MonoBehaviour
     public GameObject hookablePref;
     public int areaMinX = -300;
     public int areaMaxX = 300;
-    public int areaMinY = -200;
-    public int areaMaxY = 200;
+    public int areaMinZ = -200;
+    public int areaMaxZ = 200;
 
     public int acceptableSpawnDistance;
     public int acceptableInstantiationDistance;
@@ -78,7 +78,7 @@ public class WorldBuilder : MonoBehaviour
             while (isPositionOk == false && attempts >= 0)
             {
                 attempts--;
-                generatedLocation = new Vector3(Random.Range(areaMinX, areaMaxX), Random.Range(areaMinY, areaMaxY), 0);
+                generatedLocation = new Vector3(Random.Range(areaMinX, areaMaxX), 10, Random.Range(areaMinZ, areaMaxZ));
 
                 isPositionOk = true;
                 foreach (Vector3 h in locations)
