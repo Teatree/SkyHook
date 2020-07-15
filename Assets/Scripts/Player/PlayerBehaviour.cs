@@ -5,10 +5,14 @@ using UnityEngine;
 public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 {
     public GameObject Target;
+    public Color NotHighlightColor;
+    public Color HighlightColor;
+    public GameObject Ship;
     public SphereCollider hookable;
     public LineRenderer hookLine;
     public Camera cam;
     public GameObject deathExplosion;
+    
     public float speedIncrement = 0.5f;
 
     public float xSpread;
@@ -24,6 +28,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     Vector3 orbitPoint;
     Vector3 OldPositionSaved;
+    Vector3 relativePosition;
 
     void Start()
     {
@@ -38,7 +43,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         if (state == "launched")
         {
             // Move Player
-            cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, transform.position.y + 10, cam.transform.position.z), 0.1f);
+            cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, transform.position.y + 10, cam.transform.position.z), 0.02f);
             transform.Translate(-Vector3.forward * rotSpeed * 10 * Time.deltaTime, Space.Self);
             transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         }
@@ -47,7 +52,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         {
             Rotate();
             RenderHookLineOrbit();
-            cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(Target.transform.position.x, Target.transform.position.y + 10, cam.transform.position.z), 0.1f);
+            cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(Target.transform.position.x, Target.transform.position.y + 10, cam.transform.position.z), 0.02f);
         }
 
         OnTap();
@@ -56,18 +61,21 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         if (Target != null)
         {
-            Vector3 v = Target.transform.InverseTransformPoint(transform.position);
-            Vector3 head = v - transform.localPosition;
-            var dis = v.magnitude;
-            Vector3 dir = head / dis;
+            //Vector3 velocity = (transform.position - OldPositionSaved) / Time.deltaTime;
+            //Vector3 dir = Target.transform.position - transform.position;
 
-            Vector3 distance = Target.transform.position - transform.position;
-            Vector3 relativePosition = Vector3.zero;
-            relativePosition.x = Vector3.Dot(distance, transform.right.normalized);
-            relativePosition.y = Vector3.Dot(distance, transform.up.normalized);
-            relativePosition.z = Vector3.Dot(distance, transform.forward.normalized);
+            //relativePosition = Vector3.zero;
+            //relativePosition.x = Vector3.Dot(dir, transform.right.normalized);
+            //relativePosition.y = Vector3.Dot(dir, transform.up.normalized);
+            //relativePosition.z = Vector3.Dot(dir, transform.forward.normalized);
 
-            //Debug.Log("local pos: " + relativePosition);
+            //Vector3 cross = Vector3.zero;
+            
+            //cross = Vector3.Cross(dir, transform.position);
+
+            //relativePosition = cross;
+            //Debug.Log("rel pos (DOT): " + relativePosition);
+            //Debug.Log("rel pos (CROSS): " + cross);
         }
     }
 
@@ -78,7 +86,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         transform.LookAt(Target.transform);
     }
-
+     
     void OnTap()
     {
         launchCoolDown--;
@@ -104,6 +112,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         if (state == "launched")
         {
             Target = target;
+            Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", HighlightColor);
         }
     }
 
@@ -116,6 +125,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public void SwitchToLaunched()
     {
         Time.timeScale = 1f;
+        Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", NotHighlightColor);
         Target = null;
 
         hookLine.gameObject.SetActive(false);
@@ -131,19 +141,15 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         launchCoolDown = 10;
         rotSpeed += speedIncrement;
 
-        Vector3 distance = Target.transform.position - transform.position;
-        Vector3 relativePosition = Vector3.zero;
-        relativePosition.x = Vector3.Dot(distance, transform.right.normalized);
-        relativePosition.y = Vector3.Dot(distance, transform.up.normalized);
-        relativePosition.z = Vector3.Dot(distance, transform.forward.normalized);
+        Vector3 velocity = (transform.position - OldPositionSaved) / Time.deltaTime;
+        Vector3 dir = Target.transform.position - transform.position;
 
-        Debug.Log("CAUGHT local pos: " + relativePosition);
-        Debug.Log("distance: " + distance);
+        relativePosition = Vector3.Cross(velocity, dir);
 
-        isClockwise = relativePosition.y * distance.x > 0;
+        isClockwise = relativePosition.z >= 0;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void CollisionEnter()
     {
         GameObject v = Instantiate(deathExplosion);
         v.transform.position = transform.position;
@@ -152,8 +158,9 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         gameObject.SetActive(false);
     }
 
-    private void OnCollisionExit(Collision collision)
+    public void CollisionExit()
     {
+        Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", NotHighlightColor);
         Target = null;
     }
 
@@ -170,7 +177,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     void OnDrawGizmosSelected()
     {
         // Draw a yellow sphere at the transform's position
-        //Gizmos.color = Color.yellow;
-        //Gizmos.DrawSphere(orbitPoint, 0.4f);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.TransformPoint(relativePosition), 0.4f);
     }
 }
