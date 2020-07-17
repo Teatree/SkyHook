@@ -9,7 +9,6 @@ public class CubeMover : MonoBehaviour
 {
 
     int totalCubes;
-    public GameObject cam;
 
     [Header("Grid stuff")]
     public int width = 42;
@@ -45,31 +44,57 @@ public class CubeMover : MonoBehaviour
         cubes = getCubes(totalCubes);
     }
 
-
     // Update is called once per frame
     void Update()
     {
+        updatePositionOnMove();
 
+        if (CameraPositionGiver.Instance.ReachedForwardEdge)
+        {
+            this.transform.Translate(0, 0, 3);
+        }
+        else if (CameraPositionGiver.Instance.ReachedBEhindEdge)
+        {
+            this.transform.Translate(0, 0, -3);
+        }
+        else if (CameraPositionGiver.Instance.ReachedLeftEdge)
+        {
+            this.transform.Translate(-3, 0, 0);
+        }
+        else if (CameraPositionGiver.Instance.ReachedRightEdge)
+        {
+            this.transform.Translate(3, 0, 0);
+        }
+
+        #region Controls
         //this.transform.Translate(300, 0, 0);
 
-        this.transform.position = Vector3.Lerp(transform.position, new Vector3(500, this.transform.position.y, this.transform.position.z), 0.002f);
+        //this.transform.position = Vector3.Lerp(transform.position, new Vector3(500, this.transform.position.y, this.transform.position.z), 0.002f);
 
-        if (Input.GetKey("up"))
-        {
-            this.transform.Translate(0, 0, 2);
-        }
-        else if (Input.GetKey("down"))
-        {
-            this.transform.Translate(0, 0, -2);
-        }
-        else if (Input.GetKey("left"))
-        {
-            this.transform.Translate(-2, 0, 0);
-        }
-        else if (Input.GetKey("right"))
-        {
-            this.transform.Translate(2, 0, 0);
-        }
+        //if (Input.GetKey("up"))
+        //{
+        //    this.transform.Translate(0, 0, 2);
+        //}
+        //else if (Input.GetKey("down"))
+        //{
+        //    this.transform.Translate(0, 0, -2);
+        //}
+        //else if (Input.GetKey("left")) 
+        //{
+        //    this.transform.Translate(-2, 0, 0);
+        //}
+        //else if (Input.GetKey("right"))
+        //{
+        //    this.transform.Translate(2, 0, 0);
+        //}
+        #endregion
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        // Draw a yellow sphere at the transform's position
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y, transform.position.z + height * 3), 0.4f);
     }
 
     private void updatePositionOnMove()
@@ -95,8 +120,6 @@ public class CubeMover : MonoBehaviour
         cubePosJobHandle = cubejob.Schedule(cubeTransformAccess, cubePosJobHandle);
 
         JobHandle.CompleteAll(handles);
-            
-
     }
 
     private float getPerlinHeight(float posX, float posZ)
@@ -119,12 +142,12 @@ public class CubeMover : MonoBehaviour
             cubesTrans[i] = cub.transform;
 
         }
-        cubeTransformAccess = new TransformAccessArray(cubesTrans);
-        return cubes;
+            cubeTransformAccess = new TransformAccessArray(cubesTrans);
+            return cubes;
+        }
     }
 
 
-}
 struct PositionUpdateJob : IJobParallelForTransform
 {
 
@@ -138,8 +161,6 @@ struct PositionUpdateJob : IJobParallelForTransform
     public float xoffset;
     public float zoffset;
 
-
-
     public void Execute(int i, TransformAccess transform)
     {
         int x = i / (width * layers);
@@ -147,10 +168,9 @@ struct PositionUpdateJob : IJobParallelForTransform
         int yOffset = (i - x * height * layers - z * layers);
 
 
-
         transform.position = new Vector3(
             transform.localScale.x * (x + xoffset),
-            getPerlinHeight(x + xoffset, z + zoffset) + yOffset,
+            getPerlinHeight(x + xoffset, z + zoffset) + yOffset - 25,
             transform.localScale.z * (z + zoffset));
     }
 
@@ -163,5 +183,5 @@ struct PositionUpdateJob : IJobParallelForTransform
         return height * 10;
     }
 
-
+    
 }

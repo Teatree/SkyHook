@@ -40,7 +40,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         
     }
-
+     
     void Update()
     {
         Debug.Log("state: " + state);
