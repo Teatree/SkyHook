@@ -49,10 +49,6 @@ public class CubeMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0)) {
-            this.transform.Translate(0, 0, 0.02f);
-        }
-        updatePositionOnMove();
 
         if (Input.GetKey("up"))
         {
