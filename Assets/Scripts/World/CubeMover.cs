@@ -150,7 +150,6 @@ public class CubeMover : MonoBehaviour
 
 struct PositionUpdateJob : IJobParallelForTransform
 {
-
     public int width;
     public int height;
     public int layers;
@@ -167,7 +166,6 @@ struct PositionUpdateJob : IJobParallelForTransform
         int z = (i - x * height * layers) / layers;
         int yOffset = (i - x * height * layers - z * layers);
 
-
         transform.position = new Vector3(
             transform.localScale.x * (x + xoffset),
             getPerlinHeight(x + xoffset, z + zoffset) + yOffset - 25,
@@ -176,10 +174,14 @@ struct PositionUpdateJob : IJobParallelForTransform
 
     private float getPerlinHeight(float posX, float posZ)
     {
-
-
         float height = (Mathf.PerlinNoise(posX * smooth, posZ * smooth * 2) * heightMult +
                         Mathf.PerlinNoise(posX * smooth, posZ * smooth * 2) * heightMult) / 2f;
+        //Debug.Log("height: " + height * 10);
+        if (height > 1.2f) height = 1.2f;
+        //if (height <= 1.5f && height > 1f) height = 1f;
+        else if (height <= 1f) height = 0.6f;
+        else height = 0.9f;
+
         return height * 10;
     }
 

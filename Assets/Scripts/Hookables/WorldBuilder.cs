@@ -97,7 +97,7 @@ public class WorldBuilder : MonoBehaviour
             }
             else
             {
-                Debug.Log("omg I failed to create a hookable! so Sorry");
+                //Debug.Log("omg I failed to create a hookable! so Sorry");
             }
         }
     }

@@ -34,7 +34,7 @@ public class CameraPositionGiver : SceneSingleton<CameraPositionGiver>
     private void Update()
     {
         if(transform.position.x > RightEdge.x) {
-            Debug.Log("Reached Right Edge");
+            //Debug.Log("Reached Right Edge");
             ReachedRightEdge = true;
             UpdateEdges();
         } else {
@@ -43,7 +43,7 @@ public class CameraPositionGiver : SceneSingleton<CameraPositionGiver>
 
         if (transform.position.x < LeftEdge.x)
         {
-            Debug.Log("Reached Left Edge");
+            //Debug.Log("Reached Left Edge");
             ReachedLeftEdge = true;
             UpdateEdges();
         }
@@ -54,7 +54,7 @@ public class CameraPositionGiver : SceneSingleton<CameraPositionGiver>
 
         if (transform.position.z > ForwardEdge.z)
         {
-            Debug.Log("Reached Forward Edge");
+            //Debug.Log("Reached Forward Edge");
             ReachedForwardEdge = true;
             UpdateEdges();
         }
@@ -65,7 +65,7 @@ public class CameraPositionGiver : SceneSingleton<CameraPositionGiver>
 
         if (transform.position.z < BehindEdge.z)
         {
-            Debug.Log("Reached Back Edge");
+            //Debug.Log("Reached Back Edge");
             ReachedBEhindEdge = true;
             UpdateEdges();
         }
@@ -77,7 +77,7 @@ public class CameraPositionGiver : SceneSingleton<CameraPositionGiver>
 
     public void UpdateEdges()
     {
-        Debug.Log("Updating Edges");
+        //Debug.Log("Updating Edges");
         RightEdge = new Vector3(transform.position.x + 9, transform.position.y, transform.position.z);
         LeftEdge = new Vector3(transform.position.x - 9, transform.position.y, transform.position.z);
         ForwardEdge = new Vector3(transform.position.x, transform.position.y, transform.position.z + 7);

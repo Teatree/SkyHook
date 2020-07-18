@@ -197,7 +197,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 8
+  m_Constraints: 4
   m_CollisionDetection: 0
 --- !u!114 &1542244674789646393
 MonoBehaviour:
@@ -377,6 +377,56 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6197365018050824282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6197365018051056762}
+  - component: {fileID: 6197365018060528280}
+  m_Layer: 0
+  m_Name: SpinnerShadowProjector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6197365018051056762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6197365018050824282}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.74, y: -0.26, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1542244674789646392}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!119 &6197365018060528280
+Projector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6197365018050824282}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_NearClipPlane: -50
+  m_FarClipPlane: 2000
+  m_FieldOfView: 10
+  m_AspectRatio: 1
+  m_Orthographic: 1
+  m_OrthographicSize: 3
+  m_Material: {fileID: 2100000, guid: d0eadaa64f4ce8a4e87cf2d943a7264f, type: 2}
+  m_IgnoreLayers:
+    serializedVersion: 2
+    m_Bits: 1536
 --- !u!1 &6409119437416825909
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,97 +508,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1001 &365025553537660549
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1542244674789646392}
-    m_Modifications:
-    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_FarClipPlane
-      value: 2000
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_FieldOfView
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_Orthographic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_OrthographicSize
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 2100000, guid: 633306a0ded40fe4c926503d6826ce30, type: 2}
-    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_IgnoreLayers.m_Bits
-      value: 1536
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949600615453, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_NearClipPlane
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.74
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949608222431, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_Name
-      value: SpinnerShadowProjector
-      objectReference: {fileID: 0}
-    - target: {fileID: 5985743949608222431, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
---- !u!4 &6197365018051056762 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5985743949607789311, guid: 53c745cf24ad24947a2e3f435e70111b, type: 3}
-  m_PrefabInstance: {fileID: 365025553537660549}
-  m_PrefabAsset: {fileID: 0}

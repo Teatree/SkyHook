@@ -43,7 +43,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
      
     void Update()
     {
-        Debug.Log("state: " + state);
+        //Debug.Log("state: " + state);
 
         if (state == "launched")
         {
@@ -89,7 +89,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         else if (Input.GetMouseButtonUp(0) && Target != null && state == "launched")
         {
-            Debug.Log("all good!");
+            //Debug.Log("all good!");
 
             DetermineIfClockwise();
 
@@ -105,7 +105,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         while (hookTravelCounter < hookSpeed) {
 
             hookTravelCounter += Time.deltaTime / hookSpeed;
-            Debug.Log("sending hook couroutine");
+            //Debug.Log("sending hook couroutine");
 
             hookLine.SetPosition(0, transform.position);
 
@@ -117,7 +117,16 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
             yield return null;
         }
-        SwitchToOrbit();
+
+        if(Target.GetComponent<ItemBehaviour>() != null)
+        {
+            Target.GetComponent<ItemBehaviour>().Die();
+        }
+        else
+        {
+            SwitchToOrbit();
+        }
+
         hookTravelCounter = 0;
     }
 
