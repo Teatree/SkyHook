@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 {
     public GameObject Target;
-    public Color NotHighlightColor;
     public Color HighlightColor;
+    Color NotHighlightColor;
     public GameObject Ship;
     public SphereCollider hookable;
     public LineRenderer hookLine;
@@ -14,10 +14,8 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public GameObject deathExplosion;
     
     public float speedIncrement = 0.5f;
+    public float orbitDistance = 10.0f;
 
-    public float xSpread;
-    public float ySpread;
-    public float zOffset;
     public bool IsHooked;
     public int launchCoolDown;
 
@@ -38,13 +36,11 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         state = "orbit";
         cam.transform.position = new Vector3(Target.transform.position.x, cam.transform.position.y, Target.transform.position.z+10);
 
-        
+        NotHighlightColor = Target.GetComponent<Renderer>().material.GetColor("_EmissionColor");
     }
      
     void Update()
     {
-        //Debug.Log("state: " + state);
-
         if (state == "launched")
         {
             // Move Player
@@ -67,6 +63,10 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     void Rotate()
     {
+        // keep at orbit distance
+        Vector3 orbitPos = Target.transform.position + (transform.position - Target.transform.position).normalized * orbitDistance;
+        transform.position = Vector3.Lerp(transform.position, orbitPos, 0.01f);
+
         if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.up, rotSpeed);
         else transform.RotateAround(Target.transform.position, -Vector3.up, rotSpeed);
 
@@ -89,15 +89,11 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         else if (Input.GetMouseButtonUp(0) && Target != null && state == "launched")
         {
-            //Debug.Log("all good!");
-
             DetermineIfClockwise();
 
             hookLine.gameObject.SetActive(true);
-            hookSendCouroutine = SendHook(0.4f); // Needs to be an actual hook value
+            hookSendCouroutine = SendHook(0.01f); // Needs to be an actual hook value
             StartCoroutine(hookSendCouroutine);
-            
-            //SwitchToOrbit();
         }
     }
 
@@ -105,12 +101,10 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         while (hookTravelCounter < hookSpeed) {
 
             hookTravelCounter += Time.deltaTime / hookSpeed;
-            //Debug.Log("sending hook couroutine");
 
             hookLine.SetPosition(0, transform.position);
 
             //somewhere here we will also need to figure out interseption course for moving hookables
-
             Vector3 newTargetPos = Vector3.Lerp(transform.position, Target.transform.position, hookTravelCounter);
 
             hookLine.SetPosition(1, newTargetPos);
@@ -135,6 +129,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         if (state == "launched")
         {
             Target = target;
+            NotHighlightColor = Target.GetComponent<Renderer>().material.GetColor("_EmissionColor");
             Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", HighlightColor);
         }
     }

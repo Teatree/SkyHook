@@ -17,6 +17,6 @@ public class Hookable : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(0, 0, spinnerSpinSpeed * Time.deltaTime);
+        transform.Rotate(0, spinnerSpinSpeed * Time.deltaTime, 0);
     }
 }

@@ -69,6 +69,7 @@ public class WorldBuilder : MonoBehaviour
 
     public void GenerateLocations()
     {
+        Debug.Log("Generating Hookable Positions");
         for (int i = 0; i < hookableCount; i++)
         {
             bool isPositionOk = false;
