@@ -24,7 +24,7 @@ public class TerrainGenerator : MonoBehaviour
      
         if ((Input.GetKey("up")))
         {
-            Debug.Log("UP!");
+            //Debug.Log("UP!");
             GenerateMap(tiles[0,0].transform.position.x, 
                 tiles[0,0].transform.position.z - tiles[0, 0].transform.localScale.z
                 , 2, 2);
@@ -34,7 +34,7 @@ public class TerrainGenerator : MonoBehaviour
     }
     void GenerateMap(float xOffset, float zOffset, int mapWidth, int mapDepth)
     {
-        Debug.Log(">>>>> offset " + xOffset + " > " + zOffset);
+        //Debug.Log(">>>>> offset " + xOffset + " > " + zOffset);
         // get the tile dimensions from the tile Prefab
         Vector3 tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size;
         int tileWidth = (int)tileSize.x;
@@ -54,7 +54,7 @@ public class TerrainGenerator : MonoBehaviour
                 // instantiate a new Tile
                 GameObject tile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject;
                 tiles[xTileIndex, zTileIndex] = tile;
-                Debug.Log(">>>> instantiate > " + tile.transform.position);
+                //Debug.Log(">>>> instantiate > " + tile.transform.position);
             }
         }
     }

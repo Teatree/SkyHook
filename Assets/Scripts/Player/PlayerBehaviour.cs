@@ -27,7 +27,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     bool isClockwise;
 
     Vector3 orbitPoint;
-    Vector3 OldPositionSaved;
+    public Vector3 OldPositionSaved;
     Vector3 relativePosition;
     IEnumerator hookSendCouroutine;
 
@@ -197,10 +197,22 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         return state == "launched";
     }
 
+    public Vector3[] GetPointInDirectionFacing()
+    {
+        // notice that if you use TransformPoint and give it Vector.forward it takes forward from that transform, not world
+        Vector3[] res = new Vector3[4];
+        res[0] = transform.TransformPoint((-Vector3.forward * 30) + (Vector3.right * 17.5f));                                                                                      
+        res[1] = transform.TransformPoint((-Vector3.forward * 45) - (Vector3.right * 17.5f));                                                                                       
+        res[2] = transform.TransformPoint((-Vector3.forward * 30) - (Vector3.right * 17.5f));                                                                                      
+        res[3] = transform.TransformPoint((-Vector3.forward * 45) + (Vector3.right * 17.5f));
+
+        return res;
+    }
+
     void OnDrawGizmosSelected()
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(transform.TransformPoint(relativePosition), 0.4f);
+        //Gizmos.DrawSphere(GetPointInDirectionFacing(), 0.4f);
     }
 }

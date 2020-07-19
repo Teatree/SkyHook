@@ -123,6 +123,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &30206161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 30206163}
+  - component: {fileID: 30206162}
+  m_Layer: 0
+  m_Name: TerrainGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &30206162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30206161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25ce8ec93a16f2e40ba52f56665ea919, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapWidthInTiles: 7
+  mapDepthInTiles: 7
+  tilePrefab: {fileID: 7056696702166676705, guid: 275fdabfbdc175242bac25058a1f0964, type: 3}
+--- !u!4 &30206163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30206161}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -58.7, y: -26.76, z: -48.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &49560257
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,56 +608,6 @@ MonoBehaviour:
   mat: {fileID: 2100000, guid: 45cd48cf31430a24fa90e2148870414f, type: 2}
   initialColour: {r: 0.764151, g: 0.764151, b: 0.764151, a: 1}
   endColour: {r: 1, g: 0, b: 0, a: 1}
---- !u!1 &478368015
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 478368017}
-  - component: {fileID: 478368016}
-  m_Layer: 0
-  m_Name: MovingLandscape
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &478368016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 478368015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1b4a813a6098f84a95573c25541e1fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  width: 44
-  height: 44
-  layers: 1
-  smooth: 0.08
-  heightMult: 2
-  prefabToSpawn: {fileID: 7625319618644032718, guid: 2b7fc9b65e1f6aa43b93761cebcd6467, type: 3}
-  cubes: []
---- !u!4 &478368017
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 478368015}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.3, y: 139.621, z: -1.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &611371293
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,14 +833,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 692150398}
-  m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 13.312416, y: 10, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 623796576}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &692150400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -858,13 +854,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hookablePref: {fileID: 1542244674789646340, guid: 2af13245f39bed049b370589111e20fa, type: 3}
-  areaMinX: -500
-  areaMaxX: 500
-  areaMinZ: -500
-  areaMaxZ: 500
-  acceptableSpawnDistance: 15
+  AcceptableSpawnDistance: 12
   acceptableInstantiationDistance: 65
-  hookableCount: 500
+  hookableCount: 25
+  SpawnerPoint: {x: 0, y: 0, z: 0}
   hookables:
   - {fileID: 623796572}
   locations: []
@@ -1097,6 +1090,7 @@ MonoBehaviour:
   IsHooked: 0
   launchCoolDown: 0
   rotSpeed: 1
+  OldPositionSaved: {x: 0, y: 0, z: 0}
 --- !u!4 &952954180
 Transform:
   m_ObjectHideFlags: 0
@@ -2025,31 +2019,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.244689
+      value: -14.44
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -29.26
-      objectReference: {fileID: 0}
-    - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
-      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -25.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00000016858738
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.00000016858739
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.70710677
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_RootOrder
@@ -2057,7 +2051,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1542244674789646392, guid: 2af13245f39bed049b370589111e20fa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y

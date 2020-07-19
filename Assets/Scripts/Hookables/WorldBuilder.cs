@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WorldBuilder : MonoBehaviour
+public class WorldBuilder : SceneSingleton<WorldBuilder>
 {
     public GameObject hookablePref;
-    public int areaMinX = -300;
-    public int areaMaxX = 300;
-    public int areaMinZ = -200;
-    public int areaMaxZ = 200;
+    int AreaMinX = -50;
+    int AreaMaxX = 50;
+    int AreaMinZ = -50;
+    int AreaMaxZ = 50;
 
-    public int acceptableSpawnDistance;
+    public int AcceptableSpawnDistance;
     public int acceptableInstantiationDistance;
 
     public int hookableCount;
+
+    public Vector3[] SpawnerPoint;
 
     public List<GameObject> hookables = new List<GameObject>();
 
@@ -22,16 +24,20 @@ public class WorldBuilder : MonoBehaviour
 
     void Start()
     {
+        SpawnerPoint = new Vector3[4]; 
+
         locations.Add(hookables[0].transform.position);
         usedLocations.Add(hookables[0].transform.position);
 
-        GenerateLocations();
+        GenerateLocationsInitial(AreaMinX, AreaMaxX, AreaMinZ, AreaMaxZ, AcceptableSpawnDistance);
 
         InstantiateSpinners();
     }
 
     private void Update()
     {
+        GenerateLocationsOngoing();
+
         if (PlayerBehaviour.Instance.isLaunched())
         {
             List<Vector3> toBeInstantiated = new List<Vector3>();
@@ -67,7 +73,21 @@ public class WorldBuilder : MonoBehaviour
         }
     }
 
-    public void GenerateLocations()
+    public void GenerateLocationsOngoing()
+    {
+        // Generating locations on the fly, smartly
+        SpawnerPoint = PlayerBehaviour.Instance.GetPointInDirectionFacing();
+
+        //hookables[2].transform.position = new Vector3(SpawnerPoint.x + Random.Range(-8, 8), SpawnerPoint.y, SpawnerPoint.z + Random.Range(-8, 8));
+
+        // first check if you can spawn at nose
+        //GenerateLocationsInitial(SpawnerPoint.x+10, SpawnerPoint.y, SpawnerPoint.z, AcceptableSpawnDistance);
+
+
+        // when yes, generate a field of points
+    }
+
+    public void GenerateLocationsInitial(float areaMinX, float areaMaxX, float areaMinZ, float areaMaxZ, int acceptableSpawnDistance)
     {
         Debug.Log("Generating Hookable Positions");
         for (int i = 0; i < hookableCount; i++)
@@ -118,5 +138,15 @@ public class WorldBuilder : MonoBehaviour
                 usedLocations.Add(v);
             }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.black;
+
+        Gizmos.DrawSphere(SpawnerPoint[0], 0.8f);
+        Gizmos.DrawSphere(SpawnerPoint[1], 0.8f);
+        Gizmos.DrawSphere(SpawnerPoint[2], 0.8f);
+        Gizmos.DrawSphere(SpawnerPoint[3], 0.8f);
     }
 }
