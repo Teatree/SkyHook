@@ -201,10 +201,28 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     {
         // notice that if you use TransformPoint and give it Vector.forward it takes forward from that transform, not world
         Vector3[] res = new Vector3[4];
-        res[0] = transform.TransformPoint((-Vector3.forward * 30) + (Vector3.right * 17.5f));                                                                                      
-        res[1] = transform.TransformPoint((-Vector3.forward * 45) - (Vector3.right * 17.5f));                                                                                       
-        res[2] = transform.TransformPoint((-Vector3.forward * 30) - (Vector3.right * 17.5f));                                                                                      
-        res[3] = transform.TransformPoint((-Vector3.forward * 45) + (Vector3.right * 17.5f));
+
+        // nice try
+        //res[0] = transform.TransformPoint((-Vector3.forward * 30) + (Vector3.right * 17.5f));                                                                                      
+        //res[1] = transform.TransformPoint((-Vector3.forward * 45) - (Vector3.right * 17.5f));                                                                                       
+        //res[2] = transform.TransformPoint((-Vector3.forward * 30) - (Vector3.right * 17.5f));                                                                                      
+        //res[3] = transform.TransformPoint((-Vector3.forward * 45) + (Vector3.right * 17.5f));
+
+        res[0] = transform.TransformPoint(-Vector3.forward * 30);
+        res[0].x -= 20;
+        res[0].z -= 15;
+
+        res[1] = transform.TransformPoint(-Vector3.forward * 30);
+        res[1].x += 20;
+        res[1].z -= 15;
+
+        res[2] = transform.TransformPoint(-Vector3.forward * 30);
+        res[2].x -= 20;
+        res[2].z += 15;
+
+        res[3] = transform.TransformPoint(-Vector3.forward * 30);
+        res[3].x += 20;
+        res[3].z += 15;
 
         return res;
     }

@@ -81,7 +81,7 @@ public class WorldBuilder : SceneSingleton<WorldBuilder>
         //hookables[2].transform.position = new Vector3(SpawnerPoint.x + Random.Range(-8, 8), SpawnerPoint.y, SpawnerPoint.z + Random.Range(-8, 8));
 
         // first check if you can spawn at nose
-        //GenerateLocationsInitial(SpawnerPoint.x+10, SpawnerPoint.y, SpawnerPoint.z, AcceptableSpawnDistance);
+        GenerateLocationsInitial(SpawnerPoint[0].x, SpawnerPoint[3].x, SpawnerPoint[1].z+100, SpawnerPoint[2].z+100, AcceptableSpawnDistance);
 
 
         // when yes, generate a field of points
@@ -143,10 +143,12 @@ public class WorldBuilder : SceneSingleton<WorldBuilder>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.black;
-
         Gizmos.DrawSphere(SpawnerPoint[0], 0.8f);
+        Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(SpawnerPoint[1], 0.8f);
+        Gizmos.color = Color.green;
         Gizmos.DrawSphere(SpawnerPoint[2], 0.8f);
+        Gizmos.color = Color.red;
         Gizmos.DrawSphere(SpawnerPoint[3], 0.8f);
     }
 }
