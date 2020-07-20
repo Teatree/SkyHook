@@ -13,21 +13,15 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public Camera cam;
     public GameObject deathExplosion;
     
-    public float speedIncrement = 0.5f;
-    public float orbitDistance = 10.0f;
-
-    public bool IsHooked;
-    public int launchCoolDown;
-
-    public float rotSpeed;
-
+    public float currentDistance = 2;
+    float currentSpeed;
     string state;
-    float timer = 0;
     float hookTravelCounter = 0;
     bool isClockwise;
 
     Vector3 orbitPoint;
-    public Vector3 OldPositionSaved;
+    int launchCoolDown;
+    Vector3 oldPositionSaved;
     Vector3 relativePosition;
     IEnumerator hookSendCouroutine;
 
@@ -36,16 +30,30 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         state = "orbit";
         cam.transform.position = new Vector3(Target.transform.position.x, cam.transform.position.y, Target.transform.position.z+10);
 
+        currentSpeed = PlayerData.Instance.IntitialSpeed;
+
         NotHighlightColor = Target.GetComponent<Renderer>().material.GetColor("_EmissionColor");
     }
      
     void Update()
     {
+        float start = 1;
+        float end = 9000;
+        start += (end - start) * Mathf.Pow(7, 12);
+        end -= (end - start) * Mathf.Pow(7, 12);
+
+        
+
         if (state == "launched")
         {
+            //currentDistance += currentSpeed;
+
+            currentSpeed += (1 - Mathf.Pow(1 - currentSpeed / 1.5f, 2))/1000;
+            Debug.Log("currentDistance: " + currentSpeed);
+
             // Move Player
             cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, cam.transform.position.y, transform.position.z + 10), 0.06f);
-            transform.Translate(-Vector3.forward * rotSpeed * 10 * Time.deltaTime, Space.Self);
+            transform.Translate(-Vector3.forward * currentSpeed * 20 * Time.deltaTime, Space.Self);
             transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         }
 
@@ -58,17 +66,17 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         OnTap();
 
-        OldPositionSaved = transform.position;
+        oldPositionSaved = transform.position;
     }
 
     void Rotate()
     {
         // keep at orbit distance
-        Vector3 orbitPos = Target.transform.position + (transform.position - Target.transform.position).normalized * orbitDistance;
+        Vector3 orbitPos = Target.transform.position + (transform.position - Target.transform.position).normalized * PlayerData.Instance.OrbitDistance;
         transform.position = Vector3.Lerp(transform.position, orbitPos, 0.01f);
 
-        if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.up, rotSpeed);
-        else transform.RotateAround(Target.transform.position, -Vector3.up, rotSpeed);
+        if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.up, currentSpeed);
+        else transform.RotateAround(Target.transform.position, -Vector3.up, currentSpeed);
 
         transform.LookAt(Target.transform);
     }
@@ -156,14 +164,15 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         state = "orbit";
 
         launchCoolDown = 10;
-        rotSpeed += speedIncrement;
+
+        IncreaseCoins();
 
         //DetermineIfClockwise();
     }
 
     private void DetermineIfClockwise()
     {
-        Vector3 velocity = (transform.position - OldPositionSaved) / Time.deltaTime;
+        Vector3 velocity = (transform.position - oldPositionSaved) / Time.deltaTime;
         Vector3 dir = Target.transform.position - transform.position;
 
         relativePosition = Vector3.Cross(velocity, dir);
@@ -197,6 +206,11 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         return state == "launched";
     }
 
+    public void IncreaseCoins()
+    {
+        SessionController.Instance.CoinsAmountSession += Target.GetComponent<Hookable>().GetCoins();
+    }
+
     public Vector3[] GetPointInDirectionFacing()
     {
         // notice that if you use TransformPoint and give it Vector.forward it takes forward from that transform, not world
@@ -209,19 +223,19 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         //res[3] = transform.TransformPoint((-Vector3.forward * 45) + (Vector3.right * 17.5f));
 
         res[0] = transform.TransformPoint(-Vector3.forward * 30);
-        res[0].x -= 20;
+        res[0].x -= 30;
         res[0].z -= 15;
 
         res[1] = transform.TransformPoint(-Vector3.forward * 30);
-        res[1].x += 20;
+        res[1].x += 30;
         res[1].z -= 15;
 
         res[2] = transform.TransformPoint(-Vector3.forward * 30);
-        res[2].x -= 20;
+        res[2].x -= 30;
         res[2].z += 15;
 
         res[3] = transform.TransformPoint(-Vector3.forward * 30);
-        res[3].x += 20;
+        res[3].x += 30;
         res[3].z += 15;
 
         return res;
