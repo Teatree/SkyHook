@@ -7,7 +7,8 @@ public class SessionController : SceneSingleton<SessionController>
     // it controlls the session
     public int CoinsAmountSession;
 
-    public float PlayerSpeedIncrement = 0.03f; 
+    public float PlayerSpeedIncreaseValuef; 
+    public float PlayerSpeedMaxSpeedf; 
 
     void Start()
     {

@@ -12,13 +12,13 @@ GameObject:
   - component: {fileID: 3026749084402006211}
   - component: {fileID: 3026749084402006208}
   - component: {fileID: 3183853388945432985}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: ItemTomato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3026749084402006209
 Transform:
   m_ObjectHideFlags: 0
@@ -79,6 +79,7 @@ MonoBehaviour:
   rigidB: {fileID: 0}
   minPush: 0.8
   maxPush: 1.4
+  lifespan: 600
   spinnerSpinSpeed: 50
 --- !u!1 &3026749084698681863
 GameObject:
@@ -90,7 +91,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3026749084698681862}
   - component: {fileID: 3026749084698681977}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ItemCheeseShadowProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +130,7 @@ Projector:
   m_Material: {fileID: 2100000, guid: dd0a3c39576f77a4c8b38e5aa26179eb, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 7680
 --- !u!1 &3026749086253112647
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +142,7 @@ GameObject:
   - component: {fileID: 3026749086253112646}
   - component: {fileID: 3026749086253112760}
   - component: {fileID: 3026749086253112761}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: ItemVisualMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

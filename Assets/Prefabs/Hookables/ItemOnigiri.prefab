@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2090920120621537055}
   - component: {fileID: 2090920120621537053}
   - component: {fileID: 2090920120621537054}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: ItemVisualMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,13 +93,13 @@ GameObject:
   - component: {fileID: 2090920120668427959}
   - component: {fileID: 2090920120668427944}
   - component: {fileID: 540912634346606454}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: ItemOnigiri
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2090920120668427945
 Transform:
   m_ObjectHideFlags: 0
@@ -160,6 +160,7 @@ MonoBehaviour:
   rigidB: {fileID: 0}
   minPush: 0.8
   maxPush: 1.4
+  lifespan: 600
   spinnerSpinSpeed: 50
 --- !u!1 &2090920122472219907
 GameObject:
@@ -171,7 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2090920122472219906}
   - component: {fileID: 2090920122472219905}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ItemCheeseShadowProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,4 +211,4 @@ Projector:
   m_Material: {fileID: 2100000, guid: b5d5801f4628aa74a8391fa82c1c6a69, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 7680

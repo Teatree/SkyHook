@@ -5,11 +5,14 @@ using UnityEngine;
 public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 {
     public GameObject Target;
+    public GameObject ClawTarget;
     public Color HighlightColor;
     Color NotHighlightColor;
     public GameObject Ship;
     public SphereCollider hookable;
     public LineRenderer hookLine;
+    public SphereCollider ClawArea;
+    public LineRenderer ClawLine;
     public Camera cam;
     public GameObject deathExplosion;
     
@@ -17,13 +20,16 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     float currentSpeed;
     string state;
     float hookTravelCounter = 0;
+    float clawTravelCounter = 0;
     bool isClockwise;
+    bool isLatchedOn;
 
     Vector3 orbitPoint;
     int launchCoolDown;
     Vector3 oldPositionSaved;
     Vector3 relativePosition;
     IEnumerator hookSendCouroutine;
+    IEnumerator clawSendCouroutine;
 
     void Start()
     {
@@ -42,14 +48,18 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         start += (end - start) * Mathf.Pow(7, 12);
         end -= (end - start) * Mathf.Pow(7, 12);
 
-        
+        if (isLatchedOn)
+        {
+            ClawTarget.transform.position = transform.position;
+            ClawLine.SetPosition(0, transform.position);
+            ClawLine.SetPosition(1, ClawTarget.transform.position);
+        }
 
         if (state == "launched")
         {
             //currentDistance += currentSpeed;
-
-            currentSpeed += (1 - Mathf.Pow(1 - currentSpeed / 1.5f, 2))/1000;
-            Debug.Log("currentDistance: " + currentSpeed);
+            currentSpeed += (1 - Mathf.Pow(1 - currentSpeed / SessionController.Instance.PlayerSpeedMaxSpeedf, SessionController.Instance.PlayerSpeedIncreaseValuef))/1000;
+            //Debug.Log("currentDistance: " + currentSpeed);
 
             // Move Player
             cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, cam.transform.position.y, transform.position.z + 10), 0.06f);
@@ -89,7 +99,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         {
             Time.timeScale = 0.25f;
         }
-        
+
         else if (Input.GetMouseButtonUp(0) && state == "orbit" && launchCoolDown <= 0)
         {
             SwitchToLaunched();
@@ -132,6 +142,26 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         hookTravelCounter = 0;
     }
 
+    IEnumerator SendClaw(float clawSpeed)
+    {
+        while (clawTravelCounter < clawSpeed)
+        {
+            clawTravelCounter += Time.deltaTime / clawSpeed;
+
+            ClawLine.SetPosition(0, transform.position);
+
+            //somewhere here we will also need to figure out interseption course for moving hookables
+            Vector3 newTargetPos = Vector3.Lerp(transform.position, ClawTarget.transform.position, clawTravelCounter);
+
+            ClawLine.SetPosition(1, newTargetPos);
+
+            yield return null;
+        }
+
+        isLatchedOn = true;
+        clawTravelCounter = 0;
+    }
+
     public void SetTarget(GameObject target)
     {
         if (state == "launched")
@@ -139,6 +169,18 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
             Target = target;
             NotHighlightColor = Target.GetComponent<Renderer>().material.GetColor("_EmissionColor");
             Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", HighlightColor);
+        }
+    }
+
+    public void SetClawTarget(GameObject target)
+    {
+        if (state == "launched")
+        {
+            ClawTarget = target;
+
+            ClawLine.gameObject.SetActive(true);
+            clawSendCouroutine = SendClaw(0.5f);
+            StartCoroutine(clawSendCouroutine);
         }
     }
 
@@ -246,5 +288,10 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         // Draw a yellow sphere at the transform's position
         Gizmos.color = Color.yellow;
         //Gizmos.DrawSphere(GetPointInDirectionFacing(), 0.4f);
+    }
+
+    public string GetState()
+    {
+        return state;
     }
 }

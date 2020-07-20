@@ -214,6 +214,7 @@ MonoBehaviour:
   rigidB: {fileID: 1542244674789646394}
   minPush: 0
   maxPush: 0
+  coinsAmount: 1
   spinnerSpinSpeed: 15
 --- !u!1 &3427729150255027900
 GameObject:
@@ -426,7 +427,7 @@ Projector:
   m_Material: {fileID: 2100000, guid: d0eadaa64f4ce8a4e87cf2d943a7264f, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 7680
 --- !u!1 &6409119437416825909
 GameObject:
   m_ObjectHideFlags: 0

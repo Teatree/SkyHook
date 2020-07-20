@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5195914720790606573}
   - component: {fileID: 8734837391380945002}
   - component: {fileID: 1749540547476779300}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: ItemVisualMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,13 +93,13 @@ GameObject:
   - component: {fileID: 960808790999155692}
   - component: {fileID: 2209016201034691613}
   - component: {fileID: 8197691895784536026}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: ItemCheese
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2209016201034691615
 Transform:
   m_ObjectHideFlags: 0
@@ -160,6 +160,7 @@ MonoBehaviour:
   rigidB: {fileID: 0}
   minPush: 0.8
   maxPush: 1.4
+  lifespan: 600
   spinnerSpinSpeed: 50
 --- !u!1 &4388158810365228988
 GameObject:
@@ -171,7 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4388158810365520796}
   - component: {fileID: 4388158810358146430}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ItemCheeseShadowProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,4 +211,4 @@ Projector:
   m_Material: {fileID: 2100000, guid: 43d6f01ebac3a454991a6c8e3c22b276, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 7680
