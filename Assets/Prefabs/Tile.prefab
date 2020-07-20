@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e60659c383c3be04a82476311e02bd46, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -129,16 +129,16 @@ MonoBehaviour:
   terrainTypes:
   - name: water
     height: 0.3
-    color: {r: 0, g: 0.6700169, b: 0.85882354, a: 0}
+    color: {r: 0.45932412, g: 0, b: 0.6117647, a: 0}
   - name: sand
     height: 0.5
-    color: {r: 0.9339623, g: 0.838481, b: 0, a: 0}
+    color: {r: 0.45194107, g: 0, b: 0.7254902, a: 0}
   - name: grass
     height: 0.7
-    color: {r: 0.23832487, g: 0.64705884, b: 0, a: 0}
+    color: {r: 0.521919, g: 0, b: 0.83137256, a: 0}
   - name: mountain
     height: 1
-    color: {r: 0.3962264, g: 0.3962264, b: 0.3962264, a: 0}
+    color: {r: 0.5593964, g: 0, b: 0.85882354, a: 0}
   heightMultiplier: 3
   heightCurve:
     serializedVersion: 2
@@ -164,29 +164,29 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.6387132
       value: 0.29260683
-      inSlope: 0.18029001
-      outSlope: 0.18029001
+      inSlope: -0.0060381074
+      outSlope: -0.0060381074
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.049668793
+      inWeight: 0.46786413
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.87930775
       value: 0.69588065
-      inSlope: -0.05000336
-      outSlope: -0.05000336
+      inSlope: 0.008745516
+      outSlope: 0.008745516
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.55813754
       outWeight: 0.27915826
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: -0.010450187
+      outSlope: -0.010450187
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 1
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

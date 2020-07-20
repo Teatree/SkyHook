@@ -19,7 +19,8 @@ public class Hookable : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(0, spinnerSpinSpeed * Time.deltaTime, 0);
+        //transform.Rotate(0, spinnerSpinSpeed * Time.deltaTime, 0);
+        transform.LookAt(PlayerBehaviour.Instance.transform);
     }
 
     public int GetCoins()
