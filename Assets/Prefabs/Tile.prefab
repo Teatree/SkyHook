@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7056696702166676706}
   - component: {fileID: 7056696702166676704}
   - component: {fileID: 7056696702166676707}
+  - component: {fileID: 5141055208451106441}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -93,7 +94,7 @@ MeshCollider:
   m_GameObject: {fileID: 7056696702166676705}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -201,3 +202,17 @@ MonoBehaviour:
   - seed: 5000
     frequency: 0.25
     amplitude: 4
+--- !u!114 &5141055208451106441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056696702166676705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c71b0996b58aa142921bafb5c5770bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indexX: 0
+  indexZ: 0
