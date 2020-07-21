@@ -16,6 +16,7 @@ public struct DicStruct
         this.z = z;
     }
 }
+
 public class TerrainGenerator : MonoBehaviour
 {
     [SerializeField]

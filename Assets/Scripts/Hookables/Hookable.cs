@@ -12,6 +12,12 @@ public class Hookable : MonoBehaviour
 
     public float spinnerSpinSpeed;
 
+    [Header("Clue Gathering")]
+    public bool IsClue;
+    public Color ClueColour;
+    public Vector3 AreaOfNextClue;
+    GameObject arrowGo;
+
     void Start()
     {
         originalColor = transform.gameObject.GetComponent<Renderer>().material.GetColor("_EmissionColor");
@@ -29,9 +35,31 @@ public class Hookable : MonoBehaviour
         return coinsAmount;
     }
 
-    //public void OnTriggerExit(Collision collision)
-    //{
-    //    Debug.Log("exiting collision");
-    //    transform.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", originalColor);
-    //}
+    public void SetOriginalColour()
+    {
+        transform.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", originalColor);
+    }
+
+    public void MakeClue()
+    {
+        IsClue = true;
+        SetColourToClue();
+        GenerateDirectionOfNextClue();
+    }
+
+    private void SetColourToClue()
+    {
+        transform.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", ClueColour);
+    }
+
+    private void GenerateDirectionOfNextClue()
+    {
+        // Generate a point in some random direction and point at it.
+        AreaOfNextClue = Vector3.up * 100;
+    }
+
+    public void RevealDirection()
+    {
+        SpinnerSpawnController.Instance.PlaceArrowAndPoint(transform.position, AreaOfNextClue);
+    }
 }

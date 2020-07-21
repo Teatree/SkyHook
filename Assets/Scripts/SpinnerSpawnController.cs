@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
 {
     public GameObject hookablePref;
+    public GameObject ArrowGo;
     int AreaMinX = -50;
     int AreaMaxX = 50;
     int AreaMinZ = -50;
@@ -21,6 +22,11 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
 
     public List<Vector3> locations = new List<Vector3>();
     public List<Vector3> usedLocations = new List<Vector3>();
+
+    [Header("Clue Gathering")]
+    public bool DoHaveClue;
+    float clueAppearCounter;
+    GameObject lastGoToBeMoved;
 
     void Start()
     {
@@ -39,6 +45,16 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
         GenerateLocationsOngoing();
 
         MoveSpinnersAhead();
+
+        if (DoHaveClue == false)
+        {
+            clueAppearCounter += Time.deltaTime;
+            if (clueAppearCounter >= SessionController.Instance.TimeBeforeFirstClue)
+            {
+                ChooseARandomHookableForClue();
+                clueAppearCounter = 0;
+            }
+        }
     }
 
     public void GenerateLocationsOngoing()
@@ -113,7 +129,7 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
                 if (Vector3.Distance(g.transform.position, PlayerBehaviour.Instance.GetPosition()) > acceptableInstantiationDistance)
                 {
                     toBeRelocated.Add(g);
-                    usedLocations.Remove(g.transform.position);
+                    //usedLocations.Remove(g.transform.position);
                 }
             }
 
@@ -121,8 +137,11 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
             {
                 if (i < toBeRelocated.Count)
                 {
+                    usedLocations.Remove(toBeRelocated[i].transform.position);
+
                     toBeRelocated[i].transform.position = toBeInstantiated[i];
                     toBeRelocated[i].GetComponent<Hookable>().spinnerSpinSpeed += 50;
+
                     usedLocations.Add(toBeInstantiated[i]);
                 } else
                 {
@@ -135,6 +154,8 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
                     usedLocations.Add(toBeInstantiated[i]);
                 }
             }
+
+            if(toBeRelocated.Count>0) lastGoToBeMoved = toBeRelocated[toBeRelocated.Count-1];
         }
     }
 
@@ -153,6 +174,25 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
                 usedLocations.Add(v);
             }
         }
+    }
+
+    public void ChooseARandomHookableForClue()
+    {
+        // Choose the last gameObject to have been moved. 
+        // Why? because this is the best way of knowing that it's a object popping up in 
+        // the general direction Player is moving.
+        lastGoToBeMoved.GetComponent<Hookable>().MakeClue();
+        DoHaveClue = true;
+    }
+
+    public void PlaceArrowAndPoint(Vector3 hookbleLocation, Vector3 nextClueArea)
+    {
+        // Activate the Arrow and Point at the supplied location
+        ArrowGo.SetActive(true);
+
+        ArrowGo.transform.position = hookbleLocation;
+        ArrowGo.transform.position = new Vector3(ArrowGo.transform.position.x, ArrowGo.transform.position.y + 3, ArrowGo.transform.position.z);
+        //ArrowGo.transform.LookAt(nextClueArea);
     }
 
     private void OnDrawGizmosSelected()

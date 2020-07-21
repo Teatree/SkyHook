@@ -211,11 +211,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27d0c36e3d2de2c409851abe499a64d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidB: {fileID: 1542244674789646394}
   minPush: 0
   maxPush: 0
   coinsAmount: 1
   spinnerSpinSpeed: 15
+  IsClue: 0
+  ClueColour: {r: 0.18523192, g: 1, b: 0, a: 1}
+  AreaOfNextClue: {x: 0, y: 0, z: 0}
 --- !u!1 &3427729150255027900
 GameObject:
   m_ObjectHideFlags: 0

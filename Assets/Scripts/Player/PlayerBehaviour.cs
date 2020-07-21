@@ -7,7 +7,6 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public GameObject Target;
     public GameObject ClawTarget;
     public Color HighlightColor;
-    Color NotHighlightColor;
     public GameObject Ship;
     public SphereCollider hookable;
     public LineRenderer hookLine;
@@ -39,8 +38,6 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         cam.transform.position = new Vector3(Target.transform.position.x, cam.transform.position.y, Target.transform.position.z+10);
 
         currentSpeed = PlayerData.Instance.IntitialSpeed;
-
-        NotHighlightColor = Target.GetComponent<Renderer>().material.GetColor("_EmissionColor");
     }
      
     void Update()
@@ -53,11 +50,12 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         if (state == "launched")
         {
             //currentDistance += currentSpeed;
-            currentSpeed += (1 - Mathf.Pow(1 - currentSpeed / SessionController.Instance.PlayerSpeedMaxSpeedf, SessionController.Instance.PlayerSpeedIncreaseValuef))/1000;
+            currentSpeed += ((1 - Mathf.Pow(1 - currentSpeed / SessionController.Instance.PlayerSpeedMaxSpeedf, SessionController.Instance.PlayerSpeedIncreaseValuef))/100);
+            //Debug.Log("currentSpeed - " + currentSpeed);
 
             // Move Player
             cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, cam.transform.position.y, transform.position.z + 10), 0.06f);
-            transform.Translate(-Vector3.forward * currentSpeed * 20 * Time.deltaTime, Space.Self);
+            transform.Translate(-Vector3.forward * currentSpeed/10 * Time.deltaTime, Space.Self);
             transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         }
 
@@ -79,8 +77,8 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         Vector3 orbitPos = Target.transform.position + (transform.position - Target.transform.position).normalized * PlayerData.Instance.OrbitDistance;
         transform.position = Vector3.Lerp(transform.position, orbitPos, 0.01f);
 
-        if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.up, currentSpeed);
-        else transform.RotateAround(Target.transform.position, -Vector3.up, currentSpeed);
+        if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.up, currentSpeed * Time.deltaTime);
+        else transform.RotateAround(Target.transform.position, -Vector3.up, currentSpeed * Time.deltaTime);
 
         transform.LookAt(Target.transform);
     }
@@ -186,7 +184,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         if (state == "launched")
         {
             Target = target;
-            NotHighlightColor = Target.GetComponent<Renderer>().material.GetColor("_EmissionColor");
+            //NotHighlightColor = Target.GetComponent<Renderer>().material.GetColor("_EmissionColor");
             Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", HighlightColor);
         }
     }
@@ -214,7 +212,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public void SwitchToLaunched()
     {
         Time.timeScale = 1f;
-        Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", NotHighlightColor);
+        Target.GetComponent<Hookable>().SetOriginalColour();
         Target = null;
 
         hookLine.gameObject.SetActive(false);
@@ -230,7 +228,11 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         IncreaseCoins();
 
-        //DetermineIfClockwise();
+        //if this object has a clue, reveal it.
+        if (Target.GetComponent<Hookable>().IsClue == true)
+        {
+            Target.GetComponent<Hookable>().RevealDirection();
+        }
     }
 
     private void DetermineIfClockwise()
@@ -257,7 +259,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     {
         if (Target != null)
         {
-            Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", NotHighlightColor);
+            Target.GetComponent<Hookable>().SetOriginalColour();
             Target = null;
         }
     }
@@ -289,20 +291,20 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         //res[3] = transform.TransformPoint((-Vector3.forward * 45) + (Vector3.right * 17.5f));
 
         res[0] = transform.TransformPoint(-Vector3.forward * 30);
-        res[0].x -= 30;
-        res[0].z -= 15;
+        res[0].x -= 25;
+        res[0].z -= 10;
 
         res[1] = transform.TransformPoint(-Vector3.forward * 30);
-        res[1].x += 30;
-        res[1].z -= 15;
+        res[1].x += 25;
+        res[1].z -= 10;
 
         res[2] = transform.TransformPoint(-Vector3.forward * 30);
-        res[2].x -= 30;
-        res[2].z += 15;
+        res[2].x -= 25;
+        res[2].z += 10;
 
         res[3] = transform.TransformPoint(-Vector3.forward * 30);
-        res[3].x += 30;
-        res[3].z += 15;
+        res[3].x += 25;
+        res[3].z += 10;
 
         return res;
     }
