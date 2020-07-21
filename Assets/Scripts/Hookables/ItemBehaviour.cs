@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemBehaviour : MonoBehaviour
 {
-    public Rigidbody rigidB;
+    public GameObject deathEffect;
     public float minPush = 0.8f;
     public float maxPush = 1.4f;
 
@@ -33,6 +33,9 @@ public class ItemBehaviour : MonoBehaviour
     public void Die()
     {
         ItemsManager.Instance.isObjectActive = false;
+
+        GameObject v = Instantiate(deathEffect);
+        v.transform.position = transform.position;
 
         gameObject.SetActive(false);
     }

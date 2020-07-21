@@ -23,6 +23,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     float clawTravelCounter = 0;
     bool isClockwise;
     bool isLatchedOn;
+    bool isSendingClaw;
 
     Vector3 orbitPoint;
     int launchCoolDown;
@@ -30,6 +31,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     Vector3 relativePosition;
     IEnumerator hookSendCouroutine;
     IEnumerator clawSendCouroutine;
+    IEnumerator clawBackCouroutine;
 
     void Start()
     {
@@ -48,18 +50,10 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         start += (end - start) * Mathf.Pow(7, 12);
         end -= (end - start) * Mathf.Pow(7, 12);
 
-        if (isLatchedOn)
-        {
-            ClawTarget.transform.position = transform.position;
-            ClawLine.SetPosition(0, transform.position);
-            ClawLine.SetPosition(1, ClawTarget.transform.position);
-        }
-
         if (state == "launched")
         {
             //currentDistance += currentSpeed;
             currentSpeed += (1 - Mathf.Pow(1 - currentSpeed / SessionController.Instance.PlayerSpeedMaxSpeedf, SessionController.Instance.PlayerSpeedIncreaseValuef))/1000;
-            //Debug.Log("currentDistance: " + currentSpeed);
 
             // Move Player
             cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, cam.transform.position.y, transform.position.z + 10), 0.06f);
@@ -149,10 +143,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
             clawTravelCounter += Time.deltaTime / clawSpeed;
 
             ClawLine.SetPosition(0, transform.position);
-
-            //somewhere here we will also need to figure out interseption course for moving hookables
             Vector3 newTargetPos = Vector3.Lerp(transform.position, ClawTarget.transform.position, clawTravelCounter);
-
             ClawLine.SetPosition(1, newTargetPos);
 
             yield return null;
@@ -160,6 +151,34 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         isLatchedOn = true;
         clawTravelCounter = 0;
+
+        // bring item back in the claw
+        clawBackCouroutine = ClawBringBack(0.9f);
+        StartCoroutine(clawBackCouroutine);
+    }
+
+    IEnumerator ClawBringBack(float clawSpeed)
+    {
+        while (clawTravelCounter < clawSpeed)
+        {
+            clawTravelCounter += Time.deltaTime / clawSpeed;
+
+            ClawLine.SetPosition(0, transform.position);
+            Vector3 newTargetPos = Vector3.Lerp(transform.position, ClawTarget.transform.position, clawTravelCounter);
+            ClawLine.SetPosition(1, newTargetPos);
+
+            ClawTarget.transform.position = Vector3.Lerp(ClawTarget.transform.position, transform.position, clawTravelCounter);
+
+            yield return null;
+        }
+
+        isSendingClaw = false;
+        isLatchedOn = false;
+        clawTravelCounter = 0;
+        ClawLine.gameObject.SetActive(false);
+
+        ClawTarget.GetComponent<ItemBehaviour>().Die();
+        ClawTarget = null;
     }
 
     public void SetTarget(GameObject target)
@@ -174,10 +193,12 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public void SetClawTarget(GameObject target)
     {
-        if (state == "launched")
+        if (state == "launched" && isLatchedOn == false && isSendingClaw == false)
         {
             ClawTarget = target;
 
+            //send claw
+            isSendingClaw = true;
             ClawLine.gameObject.SetActive(true);
             clawSendCouroutine = SendClaw(0.5f);
             StartCoroutine(clawSendCouroutine);
@@ -234,8 +255,11 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public void CollisionExit()
     {
-        Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", NotHighlightColor);
-        Target = null;
+        if (Target != null)
+        {
+            Target.GetComponent<Renderer>().material.SetColor("_EmissionColor", NotHighlightColor);
+            Target = null;
+        }
     }
 
     public Vector3 GetPosition()

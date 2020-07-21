@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Hookable : MonoBehaviour
 {
-    public Rigidbody rigidB;
+    Color originalColor;
     public float minPush = 0.1f;
     public float maxPush = 0.4f;
 
@@ -14,6 +14,7 @@ public class Hookable : MonoBehaviour
 
     void Start()
     {
+        originalColor = transform.gameObject.GetComponent<Renderer>().material.GetColor("_EmissionColor");
         GetComponent<Rigidbody>().velocity = Random.onUnitSphere * (Random.Range(minPush, maxPush) * 2);
     }
 
@@ -27,4 +28,10 @@ public class Hookable : MonoBehaviour
     {
         return coinsAmount;
     }
+
+    //public void OnTriggerExit(Collision collision)
+    //{
+    //    Debug.Log("exiting collision");
+    //    transform.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", originalColor);
+    //}
 }

@@ -129,16 +129,16 @@ MonoBehaviour:
   terrainTypes:
   - name: water
     height: 0.3
-    color: {r: 0.45932412, g: 0, b: 0.6117647, a: 0}
+    color: {r: 0.25824538, g: 0.5754717, b: 0.16558382, a: 0}
   - name: sand
     height: 0.5
-    color: {r: 0.45194107, g: 0, b: 0.7254902, a: 0}
+    color: {r: 0.28853813, g: 0.6509434, b: 0.18115878, a: 0}
   - name: grass
     height: 0.7
-    color: {r: 0.521919, g: 0, b: 0.83137256, a: 0}
+    color: {r: 0.37247866, g: 0.5764706, b: 0.16470587, a: 0}
   - name: mountain
     height: 1
-    color: {r: 0.5593964, g: 0, b: 0.85882354, a: 0}
+    color: {r: 0.49439088, g: 0.5764706, b: 0.16470587, a: 0}
   heightMultiplier: 3
   heightCurve:
     serializedVersion: 2

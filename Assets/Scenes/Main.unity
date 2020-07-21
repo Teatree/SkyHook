@@ -180,7 +180,6 @@ GameObject:
   - component: {fileID: 38809795}
   - component: {fileID: 38809794}
   - component: {fileID: 38809792}
-  - component: {fileID: 38809793}
   m_Layer: 12
   m_Name: Claw
   m_TagString: Untagged
@@ -287,22 +286,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &38809793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 38809791}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 681b3e64bb9398a44afa71d9105119cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hookTimer: 8
-  mat: {fileID: 2100000, guid: 45cd48cf31430a24fa90e2148870414f, type: 2}
-  initialColour: {r: 0.764151, g: 0.764151, b: 0.764151, a: 1}
-  endColour: {r: 1, g: 0, b: 0, a: 1}
 --- !u!33 &38809794
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1142,7 +1125,7 @@ Transform:
   m_GameObject: {fileID: 836073201}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 7}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 952954180}
   m_RootOrder: 4
@@ -1563,10 +1546,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemCroissant
       objectReference: {fileID: 0}
-    - target: {fileID: 1407237936117897142, guid: b68811b1b6b6e3340832721542107112, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b68811b1b6b6e3340832721542107112, type: 3}
 --- !u!4 &966533530 stripped
@@ -1644,7 +1623,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: dd0a3c39576f77a4c8b38e5aa26179eb, type: 2}
     - target: {fileID: 11900000, guid: 28a5e79925e3ce04a82856c16a572cbe, type: 3}
       propertyPath: m_IgnoreLayers.m_Bits
-      value: 5120
+      value: 7168
       objectReference: {fileID: 0}
     - target: {fileID: 11900000, guid: 28a5e79925e3ce04a82856c16a572cbe, type: 3}
       propertyPath: m_FarClipPlane
@@ -2277,10 +2256,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemMushroom
       objectReference: {fileID: 0}
-    - target: {fileID: 566978212204868778, guid: ed16ad17c76b7434c99d08b77db394fd, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 566978212204868779, guid: ed16ad17c76b7434c99d08b77db394fd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 33.01
@@ -2439,10 +2414,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemOnigiri
       objectReference: {fileID: 0}
-    - target: {fileID: 2090920120668427946, guid: 435cdf0caaecb6947b4bcc20dae7d4ae, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 435cdf0caaecb6947b4bcc20dae7d4ae, type: 3}
 --- !u!1001 &3026749086198309433
@@ -2499,10 +2470,6 @@ PrefabInstance:
     - target: {fileID: 3026749084402006222, guid: 21edc79aca5bedc449a5e3259ccf8d9e, type: 3}
       propertyPath: m_Name
       value: ItemTomato
-      objectReference: {fileID: 0}
-    - target: {fileID: 3026749084402006222, guid: 21edc79aca5bedc449a5e3259ccf8d9e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21edc79aca5bedc449a5e3259ccf8d9e, type: 3}
@@ -2570,10 +2537,6 @@ PrefabInstance:
     - target: {fileID: 2209016201034691619, guid: 1d573196d98a26e46ba834c714f9999c, type: 3}
       propertyPath: m_Name
       value: ItemCheese
-      objectReference: {fileID: 0}
-    - target: {fileID: 2209016201034691619, guid: 1d573196d98a26e46ba834c714f9999c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d573196d98a26e46ba834c714f9999c, type: 3}

@@ -8,4 +8,9 @@ public class HookableArea : MonoBehaviour
     {
         transform.parent.GetComponent<PlayerBehaviour>().SetTarget(other.gameObject);
     }
+
+    void OnTriggerExit(Collider other)
+    {
+        PlayerBehaviour.Instance.CollisionExit();
+    }
 }

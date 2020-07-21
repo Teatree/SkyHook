@@ -8,10 +8,5 @@ public class ShipBehaviour : MonoBehaviour
     {
         PlayerBehaviour.Instance.CollisionEnter();
     }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        PlayerBehaviour.Instance.CollisionExit();
-    }
     
 }

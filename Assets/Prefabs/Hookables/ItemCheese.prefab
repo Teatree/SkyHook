@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47966c100b20a6b4faafdeae0f7e28a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidB: {fileID: 0}
+  deathEffect: {fileID: 1391589557849848, guid: 5a0cd97a4c2b9d34fb0559d97d845762, type: 3}
   minPush: 0.8
   maxPush: 1.4
   lifespan: 600
@@ -211,4 +211,4 @@ Projector:
   m_Material: {fileID: 2100000, guid: 43d6f01ebac3a454991a6c8e3c22b276, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 7680
+    m_Bits: 7936

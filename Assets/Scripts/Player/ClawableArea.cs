@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ClawableArea : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
+        //Debug.Log("colliding");
         transform.parent.GetComponent<PlayerBehaviour>().SetClawTarget(other.gameObject);
     }
 }
