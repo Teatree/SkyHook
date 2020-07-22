@@ -54,7 +54,7 @@ public class TerrainGenerator : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 100))
         {
-            Debug.Log(">>>>> " + hit.collider.gameObject.GetComponent<TileCmponent>().indexX + " : " + hit.collider.gameObject.GetComponent<TileCmponent>().indexX);
+            //Debug.Log(">>>>> " + hit.collider.gameObject.GetComponent<TileCmponent>().indexX + " : " + hit.collider.gameObject.GetComponent<TileCmponent>().indexX);
             checkAndExtendMap(hit.collider.gameObject);
         }
     }

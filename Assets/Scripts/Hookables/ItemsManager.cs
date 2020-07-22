@@ -25,19 +25,19 @@ public class ItemsManager : SceneSingleton<ItemsManager>
         {
             if (Random.Range(0,1) < SpawnChance)
             {
-                SpawnItem();
+                //SpawnItem();
             }
 
             currentTimer = 0;
         }
     }
 
-    void SpawnItem()
+    public void SpawnItem(Vector3 spawnLocation)
     {
         isObjectActive = true;
 
         int randIndex = Random.Range(0, Items.Count);
         Items[randIndex].SetActive(true);
-        Items[randIndex].transform.position = new Vector3(PlayerBehaviour.Instance.GetPosition().x, PlayerBehaviour.Instance.GetPosition().y, PlayerBehaviour.Instance.GetPosition().z+60);
+        Items[randIndex].transform.position = spawnLocation;
     }
 }

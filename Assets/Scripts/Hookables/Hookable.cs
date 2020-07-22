@@ -17,6 +17,8 @@ public class Hookable : MonoBehaviour
     public Color ClueColour;
     public Vector3 AreaOfNextClue;
     GameObject arrowGo;
+    IEnumerator dieInTimeCoroutine;
+    float dieCounter;
 
     void Start()
     {
@@ -43,8 +45,26 @@ public class Hookable : MonoBehaviour
     public void MakeClue()
     {
         IsClue = true;
+        SpinnerSpawnController.Instance.PlaceRadarParticle(transform.position);
         SetColourToClue();
-        GenerateDirectionOfNextClue();
+
+        // Die in lifetime
+        dieInTimeCoroutine = DieInTime(20); // Needs to be an actual hook value
+        StartCoroutine(dieInTimeCoroutine);
+    }
+
+    IEnumerator DieInTime(float dieTime)
+    {
+        while (dieCounter < dieTime)
+        {
+            dieCounter += Time.deltaTime;
+
+            yield return null;
+        }
+
+        SpinnerSpawnController.Instance.ClueKilled();
+        Debug.Log(gameObject.name + ": I died");
+        Destroy(this.gameObject);
     }
 
     private void SetColourToClue()
@@ -52,14 +72,24 @@ public class Hookable : MonoBehaviour
         transform.gameObject.GetComponent<Renderer>().material.SetColor("_EmissionColor", ClueColour);
     }
 
-    private void GenerateDirectionOfNextClue()
+    public void GenerateDirectionOfNextClue()
     {
+        IsClue = false;
         // Generate a point in some random direction and point at it.
-        AreaOfNextClue = Vector3.up * 100;
+        AreaOfNextClue = transform.position + (Vector3.forward * 100) + (Vector3.right * Random.Range(-25, 25)) + (Vector3.left * Random.Range(-25, 25));
+        AreaOfNextClue.y = 7.1f;
     }
 
     public void RevealDirection()
     {
         SpinnerSpawnController.Instance.PlaceArrowAndPoint(transform.position, AreaOfNextClue);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawSphere(AreaOfNextClue, 1.8f);
+        //Gizmos.DrawSphere(transform.transform.position + (Vector3.forward * 100) + (Vector3.right * Random.Range(-25,25)) + (Vector3.left * Random.Range(-25, 25)), 1.8f);
+        
     }
 }

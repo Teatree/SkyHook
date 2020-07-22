@@ -9,17 +9,13 @@ public class SessionController : SceneSingleton<SessionController>
 
     [Header("Clue Gathering")]
     public float TimeBeforeFirstClue;
+    public float BreakTimeBeforeNextClue;
     public float NumberOfCluesInitial;
     public float NumberOfCluesIcrement;
 
     [Header("Player Session Info")]
     public float PlayerSpeedIncreaseValuef; 
     public float PlayerSpeedMaxSpeedf; 
-
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()

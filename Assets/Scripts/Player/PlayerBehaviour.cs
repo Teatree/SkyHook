@@ -231,6 +231,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         //if this object has a clue, reveal it.
         if (Target.GetComponent<Hookable>().IsClue == true)
         {
+            Target.GetComponent<Hookable>().GenerateDirectionOfNextClue();
             Target.GetComponent<Hookable>().RevealDirection();
         }
     }
@@ -282,7 +283,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public Vector3[] GetPointInDirectionFacing()
     {
         // notice that if you use TransformPoint and give it Vector.forward it takes forward from that transform, not world
-        Vector3[] res = new Vector3[4];
+        Vector3[] res = new Vector3[5];
 
         // nice try
         //res[0] = transform.TransformPoint((-Vector3.forward * 30) + (Vector3.right * 17.5f));                                                                                      
@@ -292,19 +293,21 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         res[0] = transform.TransformPoint(-Vector3.forward * 30);
         res[0].x -= 25;
-        res[0].z -= 10;
+        res[0].z -= 20;
 
         res[1] = transform.TransformPoint(-Vector3.forward * 30);
         res[1].x += 25;
-        res[1].z -= 10;
+        res[1].z -= 20;
 
         res[2] = transform.TransformPoint(-Vector3.forward * 30);
         res[2].x -= 25;
-        res[2].z += 10;
+        res[2].z += 20;
 
         res[3] = transform.TransformPoint(-Vector3.forward * 30);
         res[3].x += 25;
-        res[3].z += 10;
+        res[3].z += 20;
+
+        res[4] = transform.TransformPoint(-Vector3.forward * 60); //This last point is just for identifying a position right in front of Player, useful for placing clues as stuff...
 
         return res;
     }
