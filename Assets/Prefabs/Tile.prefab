@@ -125,6 +125,7 @@ MonoBehaviour:
   tileRenderer: {fileID: 7056696702166676709}
   meshFilter: {fileID: 7056696702166676708}
   mapScale: 1
+  heightMultiplier: 7
   terrainTypes:
   - name: water
     height: 0.1
@@ -138,58 +139,6 @@ MonoBehaviour:
   - name: mountain
     height: 0.8
     color: {r: 0, g: 0.6603774, b: 0.055878144, a: 0}
-  heightMultiplier: 3
-  heightCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.30023432
-      value: -0.0030866358
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.6387132
-      value: 0.29260683
-      inSlope: -0.0060381074
-      outSlope: -0.0060381074
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.46786413
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.87930775
-      value: 0.69588065
-      inSlope: 0.008745516
-      outSlope: 0.008745516
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.55813754
-      outWeight: 0.27915826
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: -0.010450187
-      outSlope: -0.010450187
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 1
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &5141055208451106441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,3 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indexX: 0
   indexZ: 0
+  biome:
+    name: 
+    waterLevel: 0
+    terrainTypes: []

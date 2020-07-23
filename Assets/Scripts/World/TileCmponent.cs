@@ -6,6 +6,7 @@ public class TileCmponent : MonoBehaviour
 {
     public int indexX;
     public int indexZ;
+    public Biome biome;
   
     public string getCoordinates()
     {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SessionController : SceneSingleton<SessionController>
 {
@@ -20,6 +21,10 @@ public class SessionController : SceneSingleton<SessionController>
     // Update is called once per frame
     void Update()
     {
-        
+        if (PlayerBehaviour.Instance.GetState() == PlayerBehaviour.PlayerState.dead)
+        {
+            Scene scene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(scene.name);
+        }
     }
 }

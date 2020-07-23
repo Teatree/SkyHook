@@ -27,7 +27,7 @@ public class NoiseMapGeneration : MonoBehaviour
         return noiseMap;
     }
 
-    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float scale, float offsetX, float offsetZ, Wave[] waves)
+    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float scale, float offsetX, float offsetZ, List<Wave> waves)
     {
         // create an empty noise map with the mapDepth and mapWidth coordinates
         float[,] noiseMap = new float[mapDepth, mapWidth];

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 {
+    public enum PlayerState { orbit, launched, dead }
     public GameObject Target;
     public GameObject ClawTarget;
     public Color HighlightColor;
@@ -17,7 +18,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     
     public float currentDistance = 2;
     float currentSpeed;
-    string state;
+    public PlayerState state;
     float hookTravelCounter = 0;
     float clawTravelCounter = 0;
     bool isClockwise;
@@ -34,7 +35,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     void Start()
     {
-        state = "orbit";
+        state = PlayerState.orbit;
         cam.transform.position = new Vector3(Target.transform.position.x, cam.transform.position.y, Target.transform.position.z+10);
 
         currentSpeed = PlayerData.Instance.IntitialSpeed;
@@ -47,7 +48,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         start += (end - start) * Mathf.Pow(7, 12);
         end -= (end - start) * Mathf.Pow(7, 12);
 
-        if (state == "launched")
+        if (state == PlayerState.launched)
         {
             //currentDistance += currentSpeed;
             currentSpeed += ((1 - Mathf.Pow(1 - currentSpeed / SessionController.Instance.PlayerSpeedMaxSpeedf, SessionController.Instance.PlayerSpeedIncreaseValuef))/100);
@@ -59,7 +60,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
             transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         }
 
-        if (state == "orbit")
+        if (state == PlayerState.orbit)
         {
             Rotate();
             RenderHookLineOrbit();
@@ -87,17 +88,17 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     {
         launchCoolDown--;
 
-        if (Input.GetMouseButton(0) && state == "orbit" && launchCoolDown <= 0)
+        if (Input.GetMouseButton(0) && state == PlayerState.orbit && launchCoolDown <= 0)
         {
             Time.timeScale = 0.25f;
         }
 
-        else if (Input.GetMouseButtonUp(0) && state == "orbit" && launchCoolDown <= 0)
+        else if (Input.GetMouseButtonUp(0) && state == PlayerState.orbit && launchCoolDown <= 0)
         {
             SwitchToLaunched();
         }
 
-        else if (Input.GetMouseButtonUp(0) && Target != null && state == "launched")
+        else if (Input.GetMouseButtonUp(0) && Target != null && state == PlayerState.launched)
         {
             DetermineIfClockwise();
 
@@ -181,7 +182,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public void SetTarget(GameObject target)
     {
-        if (state == "launched")
+        if (state == PlayerState.launched)
         {
             Target = target;
             //NotHighlightColor = Target.GetComponent<Renderer>().material.GetColor("_EmissionColor");
@@ -191,7 +192,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public void SetClawTarget(GameObject target)
     {
-        if (state == "launched" && isLatchedOn == false && isSendingClaw == false)
+        if (state == PlayerState.launched && isLatchedOn == false && isSendingClaw == false)
         {
             ClawTarget = target;
 
@@ -217,12 +218,12 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         hookLine.gameObject.SetActive(false);
 
-        state = "launched";
+        state = PlayerState.launched;
     }
 
     public void SwitchToOrbit()
     {
-        state = "orbit";
+        state = PlayerState.orbit;
 
         launchCoolDown = 10;
 
@@ -252,7 +253,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         GameObject v = Instantiate(deathExplosion);
         v.transform.position = transform.position;
 
-        state = "dead";
+        state = PlayerState.dead;
         gameObject.SetActive(false);
     }
 
@@ -272,7 +273,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public bool isLaunched()
     {
-        return state == "launched";
+        return state == PlayerState.launched;
     }
 
     public void IncreaseCoins()
@@ -319,7 +320,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         //Gizmos.DrawSphere(GetPointInDirectionFacing(), 0.4f);
     }
 
-    public string GetState()
+    public PlayerState GetState()
     {
         return state;
     }

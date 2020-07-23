@@ -154,20 +154,157 @@ MonoBehaviour:
   mapDepthInTiles: 7
   tilePrefab: {fileID: 7056696702166676705, guid: 275fdabfbdc175242bac25058a1f0964,
     type: 3}
-  tilesList: []
+  tilesList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   waves:
-  - seed: 0
+  - seed: 803069
     frequency: 1
     amplitude: 1
-  - seed: 0
+  - seed: 794145
     frequency: 0.5
     amplitude: 2
-  - seed: 0
+  - seed: 855893
     frequency: 0.25
     amplitude: 4
-  maxZPerRowE: []
-  minZPerRowE: []
-  maxX: 0
+  heightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  biomes:
+  - name: swamp
+    waterLevel: -47.8
+    heightMultiplier: 4
+    terrainTypes:
+    - name: water
+      height: 0.1
+      color: {r: 0.3301887, g: 0.1804822, b: 0.017132433, a: 0}
+    - name: sand
+      height: 0.25
+      color: {r: 0.4339623, g: 0.10574859, b: 0, a: 0}
+    - name: grass
+      height: 0.5
+      color: {r: 0, g: 0.3301887, b: 0.021116689, a: 0}
+    - name: mountain
+      height: 0.8
+      color: {r: 0, g: 0.6603774, b: 0.055878144, a: 0}
+  - name: desert
+    waterLevel: -74
+    heightMultiplier: 2
+    terrainTypes:
+    - name: water
+      height: 0.1
+      color: {r: 0.2559185, g: 0.75746375, b: 0.764151, a: 0}
+    - name: sand
+      height: 0.5
+      color: {r: 1, g: 0.9039522, b: 0, a: 0}
+    - name: grass
+      height: 0.7
+      color: {r: 0.90588236, g: 0.5940701, b: 0, a: 0}
+    - name: mountain
+      height: 0.8
+      color: {r: 0.65882355, g: 0.18890388, b: 0, a: 0}
+  maxZPerRowE:
+  - x: 0
+    z: 6
+  - x: 1
+    z: 6
+  - x: 2
+    z: 6
+  - x: 3
+    z: 6
+  - x: 4
+    z: 6
+  - x: 5
+    z: 6
+  - x: 6
+    z: 6
+  minZPerRowE:
+  - x: 0
+    z: -1
+  - x: 1
+    z: -1
+  - x: 2
+    z: -1
+  - x: 3
+    z: 0
+  - x: 4
+    z: 0
+  - x: 5
+    z: 0
+  - x: 6
+    z: 0
+  maxX: 6
   minX: 0
 --- !u!4 &30206163
 Transform:

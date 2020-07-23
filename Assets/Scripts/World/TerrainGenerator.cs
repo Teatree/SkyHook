@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 
 [Serializable]
@@ -29,8 +30,11 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
     private List<GameObject> tilesList;
     private Vector3 tileSize;
 
-    [SerializeField]
-    public Wave[] waves;
+    public List<Wave> waves;
+
+    public AnimationCurve heightCurve;
+   // public TerrainType[] terrainTypes;
+    public List<Biome> biomes; 
 
 
     public Dictionary<int, int> maxZPerRow;
@@ -43,15 +47,17 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     void Start()
     {
-        waves[0].seed = UnityEngine.Random.Range(1, 900000);
-        waves[1].seed = UnityEngine.Random.Range(1, 900000);
-        waves[2].seed = UnityEngine.Random.Range(1, 900000);
+       // waves.ForEach(x => x.seed = UnityEngine.Random.Range(1, 900000));
+        waves[0].seed = UnityEngine.Random.Range(5598, 6678);
+        waves[1].seed = UnityEngine.Random.Range(9598, 13678);
+        waves[2].seed = UnityEngine.Random.Range(6598, 7678);
 
         tilesList = new List<GameObject>();
         maxZPerRow = new Dictionary<int, int>();
         minZPerRow = new Dictionary<int, int>();
 
         tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size;
+       // biomes.ForEach(x => x.terrainTypes = new List<TerrainType>(terrainTypes));
 
         GenerateMap(0, 0, mapWidthInTiles, mapDepthInTiles);
     }
@@ -74,7 +80,8 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         if (maxZPerRow[tc.indexX] == tc.indexZ || minZPerRow[tc.indexX] == tc.indexZ
             || tc.indexX == maxX || tc.indexX == minX)
         {
-            ExtendMap(tc.indexX, tc.indexZ, currentTile);
+            Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+            ExtendMap(tc.indexX, tc.indexZ, currentTile, b);
         }
 
     }
@@ -133,7 +140,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
     }
 
 
-    private void ExtendMap(int indexX, int indexZ, GameObject currentTile)
+    private void ExtendMap(int indexX, int indexZ, GameObject currentTile, Biome b)
     {
 
         Dictionary<string, GameObject> neighbours = getExistingNeighbours(indexX, indexZ);
@@ -144,7 +151,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
                                                     currT.position.y,
                                                     currT.position.z - tileSize.z);
-            InstantiateTile(indexX + 1, indexZ - 1, tilePosition);
+            InstantiateTile(indexX + 1, indexZ - 1, tilePosition, b);
         }
 
         if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ)))
@@ -152,7 +159,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
                                                  currT.position.y,
                                                  currT.position.z);
-            InstantiateTile(indexX + 1, indexZ, tilePosition);
+            InstantiateTile(indexX + 1, indexZ, tilePosition, b);
         }
 
         if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ + 1)))
@@ -160,35 +167,35 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
                                                  currT.position.y,
                                                  currT.position.z + tileSize.z);
-            InstantiateTile(indexX + 1, indexZ + 1, tilePosition);
+            InstantiateTile(indexX + 1, indexZ + 1, tilePosition, b);
         }
         if (!neighbours.ContainsKey("" + (indexX) + (indexZ - 1)))
         {
             Vector3 tilePosition = new Vector3(currT.position.x,
                                                  currT.position.y,
                                                  currT.position.z - tileSize.z);
-            InstantiateTile(indexX, indexZ - 1, tilePosition);
+            InstantiateTile(indexX, indexZ - 1, tilePosition, b);
         }
         if (!neighbours.ContainsKey("" + (indexX) + (indexZ + 1)))
         {
             Vector3 tilePosition = new Vector3(currT.position.x,
                                                    currT.position.y,
                                                    currT.position.z + tileSize.z);
-            InstantiateTile(indexX, indexZ + 1, tilePosition);
+            InstantiateTile(indexX, indexZ + 1, tilePosition, b);
         }
         if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ - 1)))
         {
             Vector3 tilePosition = new Vector3(currT.position.x - tileSize.x,
                                                 currT.position.y,
                                                 currT.position.z - tileSize.z);
-            InstantiateTile(indexX - 1, indexZ - 1, tilePosition);
+            InstantiateTile(indexX - 1, indexZ - 1, tilePosition, b);
         }
         if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ)))
         {
             Vector3 tilePosition = new Vector3(currT.position.x - tileSize.x,
                                                  currT.position.y,
                                                  currT.position.z);
-            InstantiateTile(indexX - 1, indexZ, tilePosition);
+            InstantiateTile(indexX - 1, indexZ, tilePosition, b);
         }
 
         if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ + 1)))
@@ -196,21 +203,26 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             Vector3 tilePosition22 = new Vector3(currT.position.x - tileSize.x,
                                                  currT.position.y,
                                                  currT.position.z + tileSize.z);
-            InstantiateTile(indexX - 1, indexZ + 1, tilePosition22);
+            InstantiateTile(indexX - 1, indexZ + 1, tilePosition22, b);
         }
     }
 
-    private void InstantiateTile(int indexX, int indexZ, Vector3 tilePosition22)
+    private void InstantiateTile(int indexX, int indexZ, Vector3 tilePosition22, Biome b)
     {
         GameObject t = Instantiate(tilePrefab, tilePosition22, Quaternion.identity) as GameObject;
         t.GetComponent<TileCmponent>().setCoordinates(indexX, indexZ);
+        t.GetComponent<TileCmponent>().biome = b;
+        t.GetComponent<TileGeneration>().terrainTypes = b.getTerrainTypes();
+        t.GetComponent<TileGeneration>().heightMultiplier = b.heightMultiplier;
+
         tilesList.Add(t);
         updateMinMaxCoordinates(t.GetComponent<TileCmponent>());
     }
 
     void GenerateMap(float xOffset, float zOffset, int mapWidth, int mapDepth)
     {
-        //Debug.Log(">>>>> offset " + xOffset + " > " + zOffset);
+        Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+
         int tileWidth = (int)tileSize.x;
         int tileDepth = (int)tileSize.z;
 
@@ -230,6 +242,8 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
                 GameObject tile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject;
                 tile.GetComponent<TileCmponent>().indexX = xTileIndex;
                 tile.GetComponent<TileCmponent>().indexZ = zTileIndex;
+                tile.GetComponent<TileGeneration>().terrainTypes = b.getTerrainTypes();
+                tile.GetComponent<TileGeneration>().heightMultiplier = b.heightMultiplier;
                 tilesList.Add(tile);
             }
         }

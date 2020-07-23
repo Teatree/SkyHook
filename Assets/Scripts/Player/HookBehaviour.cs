@@ -31,7 +31,7 @@ public class HookBehaviour : MonoBehaviour
 
         mat.SetColor("_EmissionColor", currentColour);
 
-        if (currentTimer <= 0 && PlayerBehaviour.Instance.GetState() == "orbit")
+        if (currentTimer <= 0 && PlayerBehaviour.Instance.GetState() == PlayerBehaviour.PlayerState.orbit)
         {
             PlayerBehaviour.Instance.SwitchToLaunched();
             mat.SetColor("_EmissionColor", initialColour);
