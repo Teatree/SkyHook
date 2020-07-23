@@ -17,7 +17,7 @@ public struct DicStruct
     }
 }
 
-public class TerrainGenerator : MonoBehaviour
+public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 {
     [SerializeField]
     private int mapWidthInTiles, mapDepthInTiles;
@@ -29,6 +29,9 @@ public class TerrainGenerator : MonoBehaviour
     private List<GameObject> tilesList;
     private Vector3 tileSize;
 
+    [SerializeField]
+    public Wave[] waves;
+
 
     public Dictionary<int, int> maxZPerRow;
     public Dictionary<int, int> minZPerRow; 
@@ -37,8 +40,13 @@ public class TerrainGenerator : MonoBehaviour
     public int maxX;
     public int minX;
 
+
     void Start()
     {
+        waves[0].seed = UnityEngine.Random.Range(1, 900000);
+        waves[1].seed = UnityEngine.Random.Range(1, 900000);
+        waves[2].seed = UnityEngine.Random.Range(1, 900000);
+
         tilesList = new List<GameObject>();
         maxZPerRow = new Dictionary<int, int>();
         minZPerRow = new Dictionary<int, int>();

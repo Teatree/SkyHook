@@ -382,7 +382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6197365018051056762}
   - component: {fileID: 6197365018060528280}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: SpinnerShadowProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}

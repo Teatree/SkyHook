@@ -155,6 +155,16 @@ MonoBehaviour:
   tilePrefab: {fileID: 7056696702166676705, guid: 275fdabfbdc175242bac25058a1f0964,
     type: 3}
   tilesList: []
+  waves:
+  - seed: 0
+    frequency: 1
+    amplitude: 1
+  - seed: 0
+    frequency: 0.5
+    amplitude: 2
+  - seed: 0
+    frequency: 0.25
+    amplitude: 4
   maxZPerRowE: []
   minZPerRowE: []
   maxX: 0
@@ -404,6 +414,12 @@ Transform:
   m_Father: {fileID: 363813467}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 35.217}
+--- !u!1 &214292675 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4694783043824732720, guid: 263615028fb3bc948a96000a360a56e5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1181236428}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &349765903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,7 +1080,7 @@ MonoBehaviour:
   hookablePref: {fileID: 1542244674789646340, guid: 2af13245f39bed049b370589111e20fa,
     type: 3}
   ArrowGo: {fileID: 1025729351}
-  RadarParticlePref: {fileID: 0}
+  RadarParticlePref: {fileID: 214292675}
   AcceptableSpawnDistance: 25
   acceptableInstantiationDistance: 50
   hookableCount: 25
@@ -2088,7 +2104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CoinsAmountSession: 0
   TimeBeforeFirstClue: 15
-  BreakTimeBeforeNextClue: 0
+  BreakTimeBeforeNextClue: 15
   NumberOfCluesInitial: 2
   NumberOfCluesIcrement: 0
   PlayerSpeedIncreaseValuef: 400
@@ -2342,13 +2358,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1561489994}
-  m_LocalRotation: {x: -0.23344536, y: 0, z: 0, w: 0.97236997}
-  m_LocalPosition: {x: -37, y: -142, z: 142}
+  m_LocalRotation: {x: -0.10452837, y: 0, z: 0, w: 0.9945219}
+  m_LocalPosition: {x: 0, y: 0, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 963194228}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -27, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -12, y: 0, z: 0}
 --- !u!81 &1561489996
 AudioListener:
   m_ObjectHideFlags: 0
@@ -2761,11 +2777,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6197365018050824282, guid: 2af13245f39bed049b370589111e20fa,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2af13245f39bed049b370589111e20fa, type: 3}
