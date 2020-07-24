@@ -92,9 +92,7 @@ public class TileGeneration : MonoBehaviour
 
     TerrainType ChooseTerrainType(float height)
     {
-
-        int r = Random.Range(0, 2);
-        if (r == 0)
+        if (secondaryTerrainTypes == null || secondaryTerrainTypes.Count == 0)
         {
             foreach (TerrainType terrainType in mainTerrainTypes)
             {
@@ -104,14 +102,29 @@ public class TileGeneration : MonoBehaviour
                 }
             }
         }
-        else
+        // blend 
+        if (secondaryTerrainTypes != null && secondaryTerrainTypes.Count > 0)
         {
-            foreach (TerrainType terrainType in secondaryTerrainTypes)
+            int r = Random.Range(0, 2);
+            if (r == 0)
             {
-                if (height < terrainType.height)
+                foreach (TerrainType terrainType in mainTerrainTypes)
                 {
+                    if (height < terrainType.height)
+                    {
+                        return terrainType;
+                    }
+                }
+            }
+            else
+            {
+                foreach (TerrainType terrainType in secondaryTerrainTypes)
+                {
+                    if (height < terrainType.height)
+                    {
 
-                    return terrainType;
+                        return terrainType;
+                    }
                 }
             }
         }

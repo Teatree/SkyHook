@@ -9,7 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: whitetile
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _GLOSSYREFLECTIONS_OFF _MAPPING_LATITUDE_LONGITUDE_LAYOUT _SUNDISK_HIGH_QUALITY
+  m_ShaderKeywords: _GLOSSYREFLECTIONS_OFF _MAPPING_LATITUDE_LONGITUDE_LAYOUT _NORMALMAP
+    _SUNDISK_HIGH_QUALITY
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -24,7 +25,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 92826b7bb60172847b64026282dcddd3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -103,12 +104,12 @@ Material:
     - _DstBlend: 0
     - _Exposure: 3.46
     - _GlossMapScale: 1
-    - _Glossiness: 1
+    - _Glossiness: 0.163
     - _GlossyReflections: 0
     - _ImageType: 0
     - _Layout: 0
     - _Mapping: 1
-    - _Metallic: 0.044
+    - _Metallic: 0.701
     - _MirrorOnBack: 0
     - _Mode: 0
     - _OcclusionStrength: 1
