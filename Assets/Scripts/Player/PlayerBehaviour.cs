@@ -9,15 +9,18 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public GameObject ClawTarget;
     public Color HighlightColor;
     public GameObject Ship;
-    public SphereCollider hookable;
+    public SphereCollider HookableArea;
+    public Transform HookableAreaTransform;
     public LineRenderer hookLine;
-    public SphereCollider ClawArea;
+    public SphereCollider ClawableArea;
+    public Transform ClawableAreaTransform;
     public LineRenderer ClawLine;
     public Camera cam;
     public GameObject deathExplosion;
     
     public float currentDistance = 2;
     float currentSpeed;
+    float speedBeforeHookableSaved;
     public PlayerState state;
     float hookTravelCounter = 0;
     float clawTravelCounter = 0;
@@ -27,6 +30,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     Vector3 orbitPoint;
     int launchCoolDown;
+    float tapCoolDown;
     Vector3 oldPositionSaved;
     Vector3 relativePosition;
     IEnumerator hookSendCouroutine;
@@ -50,9 +54,8 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         if (state == PlayerState.launched)
         {
-            //currentDistance += currentSpeed;
-            currentSpeed += ((1 - Mathf.Pow(1 - currentSpeed / SessionController.Instance.PlayerSpeedMaxSpeedf, SessionController.Instance.PlayerSpeedIncreaseValuef))/100);
-            //Debug.Log("currentSpeed - " + currentSpeed);
+            //currentSpeed += ((1 - Mathf.Pow(1 - currentSpeed / SessionController.Instance.PlayerSpeedMaxSpeedf, SessionController.Instance.PlayerSpeedIncreaseValuef))/100);
+            currentSpeed += 0.5f;
 
             // Move Player
             cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, cam.transform.position.y, transform.position.z + 10), 0.06f);
@@ -70,6 +73,14 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         OnTap();
 
         oldPositionSaved = transform.position;
+
+        //bad
+        tapCoolDown -= Time.deltaTime;
+        if (tapCoolDown <= 0 && HookableArea.gameObject.activeSelf == false && state == PlayerState.launched)
+        {
+            HookableArea.gameObject.SetActive(true);
+            ClawableArea.gameObject.SetActive(false);
+        }
     }
 
     void Rotate()
@@ -92,12 +103,10 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         {
             Time.timeScale = 0.25f;
         }
-
         else if (Input.GetMouseButtonUp(0) && state == PlayerState.orbit && launchCoolDown <= 0)
         {
             SwitchToLaunched();
         }
-
         else if (Input.GetMouseButtonUp(0) && Target != null && state == PlayerState.launched)
         {
             DetermineIfClockwise();
@@ -105,6 +114,12 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
             hookLine.gameObject.SetActive(true);
             hookSendCouroutine = SendHook(0.01f); // Needs to be an actual hook value
             StartCoroutine(hookSendCouroutine);
+        }
+        else if (Input.GetMouseButtonUp(0) && Target == null && state == PlayerState.launched && tapCoolDown <= 0)
+        {
+            tapCoolDown = 0.5f;
+            HookableArea.gameObject.SetActive(false);
+            ClawableArea.gameObject.SetActive(false);
         }
     }
 
@@ -212,10 +227,15 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public void SwitchToLaunched()
     {
+        speedBeforeHookableSaved = currentSpeed;
+
         Time.timeScale = 1f;
         Target.GetComponent<Hookable>().SetOriginalColour();
+        SpinnerSpawnController.Instance.ForceMoveSpinner(Target);
         Target = null;
 
+        HookableArea.gameObject.SetActive(true);
+        ClawableArea.gameObject.SetActive(true);
         hookLine.gameObject.SetActive(false);
 
         state = PlayerState.launched;
@@ -223,7 +243,14 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public void SwitchToOrbit()
     {
+        currentSpeed = speedBeforeHookableSaved + 1;
+
+        SessionController.Instance.IncreaseThePush();
         state = PlayerState.orbit;
+        ClawableArea.gameObject.SetActive(false);
+        HookableArea.gameObject.SetActive(false);
+        HookableAreaTransform.localScale -= HookableAreaTransform.localScale * 0.025f;
+        ClawableAreaTransform.localScale -= ClawableAreaTransform.localScale * 0.025f;
 
         launchCoolDown = 10;
 
@@ -255,6 +282,8 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         state = PlayerState.dead;
         gameObject.SetActive(false);
+
+        SessionController.Instance.RestartGame();
     }
 
     public void CollisionExit()

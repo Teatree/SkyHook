@@ -24,15 +24,6 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
     public List<Vector3> locations = new List<Vector3>();
     public List<Vector3> usedLocations = new List<Vector3>();
 
-    [Header("Clue Gathering")]
-    bool DoHaveClue;
-    float clueAppearCounter;
-    float clueLifeTime;
-    float clueBreakTime;
-    float currentNumberOfClues;
-    Vector3 directionPositionSaved;
-    
-
     void Start()
     {
         SpawnerPoint = new Vector3[4]; 
@@ -42,7 +33,6 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
 
         GenerateLocationsInitial(AreaMinX, AreaMaxX, AreaMinZ, AreaMaxZ, AcceptableSpawnDistance);
 
-        clueBreakTime = SessionController.Instance.BreakTimeBeforeNextClue;
         InstantiateSpinners();
     }
 
@@ -51,49 +41,9 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
         GenerateLocationsOngoing();
 
         MoveSpinnersAhead();
-
-        if (clueBreakTime >= SessionController.Instance.BreakTimeBeforeNextClue)
-        {
-            if (DoHaveClue == false)
-            {
-                clueAppearCounter += Time.deltaTime;
-                if (clueAppearCounter >= SessionController.Instance.TimeBeforeFirstClue)
-                {
-                    ChooseARandomHookableForClue();
-                    clueAppearCounter = 0;
-                }
-            }
-            else
-            {
-                clueLifeTime -= Time.deltaTime;
-                // check whether distance from clue is sufficient, if yes make another
-                if (directionPositionSaved != null)
-                {
-                    float dist = Vector3.Distance(PlayerBehaviour.Instance.GetPosition(), directionPositionSaved);
-                    //Debug.Log("dist: " + dist);
-
-                    if (dist < 25)
-                    {
-                        directionPositionSaved = new Vector3();
-                        ChooseARandomHookableForClue();
-                    }
-                }
-            }
-        }
-        else
-        {
-            clueBreakTime += Time.deltaTime;
-            float dist = Vector3.Distance(PlayerBehaviour.Instance.GetPosition(), directionPositionSaved);
-            if (dist < 25)
-            {
-                PlaceRadarParticle(directionPositionSaved);
-                ItemsManager.Instance.SpawnItem(directionPositionSaved);
-
-                directionPositionSaved = new Vector3();
-            }
-        }
     }
 
+    #region Hokable Gen
     public void GenerateLocationsOngoing()
     {
         // Generating locations on the fly, smartly
@@ -147,6 +97,31 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
         }
     }
 
+    public void ForceMoveSpinner(GameObject go)
+    {
+        List<Vector3> toBeInstantiated = new List<Vector3>();
+        foreach (Vector3 v in locations)
+        {
+            if (Vector3.Distance(PlayerBehaviour.Instance.GetPosition(), v) < acceptableInstantiationDistance && usedLocations.Contains(v) == false)
+            {
+                toBeInstantiated.Add(v);
+            }
+        }
+
+        go.GetComponent<Hookable>().minPush = SessionController.Instance.GetCurrentHookableMinPush();
+        go.GetComponent<Hookable>().maxPush = SessionController.Instance.GetCurrentHookableMaxPush();
+
+        for (int i = 0; i < toBeInstantiated.Count; i++)
+        {
+            usedLocations.Remove(go.transform.position);
+
+            go.transform.position = toBeInstantiated[i];
+            go.GetComponent<Hookable>().spinnerSpinSpeed += 50;
+
+            usedLocations.Add(toBeInstantiated[i]);
+        }
+    }
+
     public void MoveSpinnersAhead()
     {
         if (PlayerBehaviour.Instance.isLaunched())
@@ -167,6 +142,8 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
                 {
                     toBeRelocated.Add(g);
                     //usedLocations.Remove(g.transform.position);
+                    g.GetComponent<Hookable>().minPush = SessionController.Instance.GetCurrentHookableMinPush();
+                    g.GetComponent<Hookable>().maxPush = SessionController.Instance.GetCurrentHookableMaxPush();
                 }
             }
 
@@ -184,6 +161,8 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
                 {
                     GameObject t = Instantiate(hookablePref, transform);
                     t.transform.position = toBeInstantiated[i];
+                    t.GetComponent<Hookable>().minPush = SessionController.Instance.GetCurrentHookableMinPush();
+                    t.GetComponent<Hookable>().maxPush = SessionController.Instance.GetCurrentHookableMaxPush();
 
                     t.GetComponent<Hookable>().spinnerSpinSpeed = 15;
 
@@ -210,49 +189,7 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
             }
         }
     }
-
-    public GameObject IdentifyPotentialClue(Vector3 lookPoint)
-    {
-        float smallest = 50;
-        GameObject goWithSmallest = hookables[1];
-
-        foreach (GameObject g in hookables)
-        {
-            float dist = Vector3.Distance(g.transform.position, lookPoint);
-            if (dist < smallest)
-            {
-                smallest = dist;
-                goWithSmallest = g;
-            }
-        }
-
-        Debug.Log("identifying go with smallest as " + goWithSmallest.transform.position);
-        return goWithSmallest;
-    }
-
-    public void ChooseARandomHookableForClue()
-    {
-        // Choose the last gameObject to have been moved. 
-        // Why? because this is the best way of knowing that it's a object popping up in 
-        // the general direction Player is moving.
-        GameObject chosenClueGuy = IdentifyPotentialClue(SpawnerPoint[4]);
-        if (chosenClueGuy != null)
-        {
-            chosenClueGuy.GetComponent<Hookable>().MakeClue();
-            chosenClueGuy.gameObject.name = "Clue";
-            hookables.Remove(chosenClueGuy);
-
-            DoHaveClue = true;
-        }
-    }
-
-    public void ClueKilled()
-    {
-        DoHaveClue = false;
-
-        //Debug.Log("Resettings Clues -- beacuse died ");
-        //currentNumberOfClues = 0;
-    }
+    #endregion
 
     public void PlaceArrowAndPoint(Vector3 hookbleLocation, Vector3 nextClueArea)
     {
@@ -264,15 +201,7 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
         ArrowGo.transform.LookAt(nextClueArea);
         ArrowGo.transform.eulerAngles = new Vector3(0, ArrowGo.transform.eulerAngles.y, ArrowGo.transform.eulerAngles.z);
 
-        directionPositionSaved = nextClueArea;
-
-        currentNumberOfClues++;
-        if(currentNumberOfClues == SessionController.Instance.NumberOfCluesInitial)
-        {
-            Debug.Log("Break Starts");
-            clueBreakTime = 0;
-            currentNumberOfClues = 0;
-        }
+        ItemsManager.Instance.SaveDirection(nextClueArea);
     }
 
     public void PlaceRadarParticle(Vector3 location)
@@ -280,6 +209,16 @@ public class SpinnerSpawnController : SceneSingleton<SpinnerSpawnController>
         RadarParticlePref.SetActive(true);
         RadarParticlePref.transform.position = location;
         RadarParticlePref.GetComponent<ParticleSystem>().Play();
+    }
+
+    public List<GameObject> GetHookables()
+    {
+        return hookables;
+    }
+
+    public void RemoveFromHookables(GameObject go)
+    {
+        hookables.Remove(go);
     }
 
     private void OnDrawGizmosSelected()

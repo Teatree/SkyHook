@@ -55,7 +55,6 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,7 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2209016201034691619
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,10 +155,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47966c100b20a6b4faafdeae0f7e28a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathEffect: {fileID: 1391589557849848, guid: 5a0cd97a4c2b9d34fb0559d97d845762, type: 3}
+  deathEffect: {fileID: 1391589557849848, guid: 5a0cd97a4c2b9d34fb0559d97d845762,
+    type: 3}
   minPush: 0.8
   maxPush: 1.4
-  lifespan: 600
+  type: 
+  lifespan: 30
   spinnerSpinSpeed: 50
 --- !u!1 &4388158810365228988
 GameObject:

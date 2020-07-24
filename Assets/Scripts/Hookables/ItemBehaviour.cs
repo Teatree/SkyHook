@@ -7,6 +7,7 @@ public class ItemBehaviour : MonoBehaviour
     public GameObject deathEffect;
     public float minPush = 0.8f;
     public float maxPush = 1.4f;
+    public string type;
 
     public float lifespan;
     float currentLife;
@@ -32,7 +33,9 @@ public class ItemBehaviour : MonoBehaviour
 
     public void Die()
     {
-        ItemsManager.Instance.isObjectActive = false;
+        if (type == "random") ItemsManager.Instance.RandomDied();
+        if (type == "special") ItemsManager.Instance.SpecialDied();
+        type = "";
 
         GameObject v = Instantiate(deathEffect);
         v.transform.position = transform.position;

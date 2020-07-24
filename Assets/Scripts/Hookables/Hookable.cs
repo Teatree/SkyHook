@@ -49,7 +49,7 @@ public class Hookable : MonoBehaviour
         SetColourToClue();
 
         // Die in lifetime
-        dieInTimeCoroutine = DieInTime(20); // Needs to be an actual hook value
+        dieInTimeCoroutine = DieInTime(20);
         StartCoroutine(dieInTimeCoroutine);
     }
 
@@ -62,9 +62,15 @@ public class Hookable : MonoBehaviour
             yield return null;
         }
 
-        SpinnerSpawnController.Instance.ClueKilled();
+        ItemsManager.Instance.ClueKilled();
         Debug.Log(gameObject.name + ": I died");
         Destroy(this.gameObject);
+    }
+
+    public void Die(float secs)
+    {
+        dieInTimeCoroutine = DieInTime(secs); 
+        StartCoroutine(dieInTimeCoroutine);
     }
 
     private void SetColourToClue()
