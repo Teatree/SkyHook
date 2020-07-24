@@ -13,22 +13,24 @@ public class TileGeneration : MonoBehaviour
     [SerializeField]
     public MeshFilter meshFilter;
 
-    
+
     public float mapScale;
 
-    public List<TerrainType> terrainTypes; 
+    public List<TerrainType> mainTerrainTypes;
+    public List<TerrainType> secondaryTerrainTypes;
+
 
     void GenerateTile()
     {
         Vector3[] meshVertices = this.meshFilter.mesh.vertices;
-        int tileDepth = (int)Mathf.Sqrt(meshVertices.Length) ;
-        int tileWidth = tileDepth ;
+        int tileDepth = (int)Mathf.Sqrt(meshVertices.Length);
+        int tileWidth = tileDepth;
 
-        float offsetX = -this.gameObject.transform.position.x / transform.localScale.x ;
+        float offsetX = -this.gameObject.transform.position.x / transform.localScale.x;
         float offsetZ = -this.gameObject.transform.position.z / transform.localScale.z;
 
         float[,] heightMap = this.noiseMapGeneration.GenerateNoiseMap(tileDepth, tileWidth, this.mapScale, offsetX, offsetZ, TerrainGenerator.Instance.waves);
-        
+
         Texture2D tileTexture = BuildTexture(heightMap);
         this.tileRenderer.material.mainTexture = tileTexture;
 
@@ -54,6 +56,7 @@ public class TileGeneration : MonoBehaviour
 
         Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
         tileTexture.wrapMode = TextureWrapMode.Clamp;
+        tileTexture.filterMode = FilterMode.Point;
         tileTexture.SetPixels(colorMap);
         tileTexture.Apply();
 
@@ -74,7 +77,7 @@ public class TileGeneration : MonoBehaviour
                 float height = heightMap[zIndex, xIndex];
 
                 Vector3 vertex = meshVertices[vertexIndex];
-                meshVertices[vertexIndex] = new Vector3(vertex.x, TerrainGenerator.Instance.currentHeightCurve.Evaluate(height) * TerrainGenerator.Instance.currentHeightMultiplier , vertex.z);
+                meshVertices[vertexIndex] = new Vector3(vertex.x, TerrainGenerator.Instance.currentHeightCurve.Evaluate(height) * TerrainGenerator.Instance.currentHeightMultiplier, vertex.z);
 
                 vertexIndex++;
             }
@@ -85,20 +88,35 @@ public class TileGeneration : MonoBehaviour
         this.meshFilter.mesh.RecalculateNormals();
     }
 
-   
+
 
     TerrainType ChooseTerrainType(float height)
     {
-        foreach (TerrainType terrainType in terrainTypes)
+
+        int r = Random.Range(0, 2);
+        if (r == 0)
         {
-            if (height < terrainType.height)
+            foreach (TerrainType terrainType in mainTerrainTypes)
             {
-                return terrainType;
+                if (height < terrainType.height)
+                {
+                    return terrainType;
+                }
             }
         }
-        return terrainTypes[terrainTypes.Count - 1];
-    }
+        else
+        {
+            foreach (TerrainType terrainType in secondaryTerrainTypes)
+            {
+                if (height < terrainType.height)
+                {
 
+                    return terrainType;
+                }
+            }
+        }
+        return mainTerrainTypes[mainTerrainTypes.Count - 1];
+    }
 
     void Start()
     {

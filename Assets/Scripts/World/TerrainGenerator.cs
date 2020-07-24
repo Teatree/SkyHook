@@ -165,7 +165,34 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         GameObject t = Instantiate(tilePrefab, tilePosition22, Quaternion.identity) as GameObject;
         t.GetComponent<TileCmponent>().setCoordinates(indexX, indexZ);
         t.GetComponent<TileCmponent>().biome = b;
-        t.GetComponent<TileGeneration>().terrainTypes = b.getTerrainTypes();
+        t.GetComponent<TileGeneration>().mainTerrainTypes = b.getTerrainTypes();
+
+
+        if (neighbours.ContainsKey("" + (indexX + 1) + indexZ) &&
+            neighbours["" + (indexX + 1) + indexZ].GetComponent<TileCmponent>().biome != b)
+        {
+            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
+                neighbours["" + (indexX + 1) + indexZ].GetComponent<TileGeneration>().mainTerrainTypes;
+        }
+        if (neighbours.ContainsKey("" + (indexX - 1) + indexZ) &&
+            neighbours["" + (indexX - 1) + indexZ].GetComponent<TileCmponent>().biome != b)
+        {
+            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
+                neighbours["" + (indexX - 1) + indexZ].GetComponent<TileGeneration>().mainTerrainTypes;
+        }
+        if (neighbours.ContainsKey("" + indexX + (indexZ - 1)) &&
+            neighbours["" + indexX + (indexZ - 1)].GetComponent<TileCmponent>().biome != b)
+        {
+            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
+                neighbours["" + indexX + (indexZ - 1)].GetComponent<TileGeneration>().mainTerrainTypes;
+        }
+        if (neighbours.ContainsKey("" + indexX + (indexZ + 1)) &&
+            neighbours["" + "" + indexX + (indexZ + 1)].GetComponent<TileCmponent>().biome != b)
+        {
+            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
+                neighbours["" + indexX + (indexZ + 1)].GetComponent<TileGeneration>().mainTerrainTypes;
+        }
+
         neighbours["" + indexX + indexZ] = t;
         tilesList.Add(t);
 
@@ -197,7 +224,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
                 GameObject tile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject;
                 tile.GetComponent<TileCmponent>().indexX = xTileIndex;
                 tile.GetComponent<TileCmponent>().indexZ = zTileIndex;
-                tile.GetComponent<TileGeneration>().terrainTypes = b.getTerrainTypes();
+                tile.GetComponent<TileGeneration>().mainTerrainTypes = b.getTerrainTypes();
                 tilesList.Add(tile);
             }
         }
