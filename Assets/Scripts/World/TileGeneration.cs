@@ -5,18 +5,16 @@ using UnityEngine;
 public class TileGeneration : MonoBehaviour
 {
     [SerializeField]
-    NoiseMapGeneration noiseMapGeneration;
+    public NoiseMapGeneration noiseMapGeneration;
 
     [SerializeField]
-    private MeshRenderer tileRenderer;
+    public MeshRenderer tileRenderer;
 
     [SerializeField]
-    private MeshFilter meshFilter;
+    public MeshFilter meshFilter;
 
-    [SerializeField]
-    private float mapScale;
-
-    public float heightMultiplier;
+    
+    public float mapScale;
 
     public List<TerrainType> terrainTypes; 
 
@@ -76,7 +74,7 @@ public class TileGeneration : MonoBehaviour
                 float height = heightMap[zIndex, xIndex];
 
                 Vector3 vertex = meshVertices[vertexIndex];
-                meshVertices[vertexIndex] = new Vector3(vertex.x, TerrainGenerator.Instance.heightCurve.Evaluate(height) * this.heightMultiplier , vertex.z);
+                meshVertices[vertexIndex] = new Vector3(vertex.x, TerrainGenerator.Instance.currentHeightCurve.Evaluate(height) * TerrainGenerator.Instance.currentHeightMultiplier , vertex.z);
 
                 vertexIndex++;
             }

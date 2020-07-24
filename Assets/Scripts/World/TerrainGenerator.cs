@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
+using static PlayerBehaviour;
 
 [Serializable]
 public struct DicStruct
@@ -20,22 +20,20 @@ public struct DicStruct
 
 public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 {
-    [SerializeField]
-    private int mapWidthInTiles, mapDepthInTiles;
+    public int mapWidthInTiles, mapDepthInTiles;
 
-    [SerializeField]
-    private GameObject tilePrefab;
+    public GameObject tilePrefab;
 
-    [SerializeField]
-    private List<GameObject> tilesList;
-    private Vector3 tileSize;
+    public List<GameObject> tilesList;
+    public Vector3 tileSize;
 
     public List<Wave> waves;
 
-    public AnimationCurve heightCurve;
+   
    // public TerrainType[] terrainTypes;
-    public List<Biome> biomes; 
-
+    public List<Biome> biomes;
+    public float currentHeightMultiplier;
+    public AnimationCurve currentHeightCurve;
 
     public Dictionary<int, int> maxZPerRow;
     public Dictionary<int, int> minZPerRow; 
@@ -44,10 +42,15 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
     public int maxX;
     public int minX;
 
+    private int raycastLayerMask;
+
+
 
     void Start()
     {
-       // waves.ForEach(x => x.seed = UnityEngine.Random.Range(1, 900000));
+
+        raycastLayerMask = LayerMask.GetMask("Terrain");
+        // waves.ForEach(x => x.seed = UnityEngine.Random.Range(1, 900000));
         waves[0].seed = UnityEngine.Random.Range(5598, 6678);
         waves[1].seed = UnityEngine.Random.Range(9598, 13678);
         waves[2].seed = UnityEngine.Random.Range(6598, 7678);
@@ -64,12 +67,19 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     private void Update()
     {
-        showDictionariesInEditor();
-        RaycastHit hit;
-        if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 100))
+        if (Application.isEditor) {
+            showDictionariesInEditor();
+        }
+
+        if (PlayerBehaviour.Instance.GetState() == PlayerState.launched)
         {
-            //Debug.Log(">>>>> " + hit.collider.gameObject.GetComponent<TileCmponent>().indexX + " : " + hit.collider.gameObject.GetComponent<TileCmponent>().indexX);
-            checkAndExtendMap(hit.collider.gameObject);
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
+                {
+                    checkAndExtendMap(hit.collider.gameObject);
+                }
+            }
         }
     }
 
@@ -81,6 +91,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             || tc.indexX == maxX || tc.indexX == minX)
         {
             Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+            b.heightMultiplier = currentHeightMultiplier; 
             ExtendMap(tc.indexX, tc.indexZ, currentTile, b);
         }
 
@@ -213,7 +224,6 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         t.GetComponent<TileCmponent>().setCoordinates(indexX, indexZ);
         t.GetComponent<TileCmponent>().biome = b;
         t.GetComponent<TileGeneration>().terrainTypes = b.getTerrainTypes();
-        t.GetComponent<TileGeneration>().heightMultiplier = b.heightMultiplier;
 
         tilesList.Add(t);
         updateMinMaxCoordinates(t.GetComponent<TileCmponent>());
@@ -222,6 +232,8 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
     void GenerateMap(float xOffset, float zOffset, int mapWidth, int mapDepth)
     {
         Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+        this.currentHeightMultiplier = b.heightMultiplier;
+        this.currentHeightCurve = b.heightCurve;
 
         int tileWidth = (int)tileSize.x;
         int tileDepth = (int)tileSize.z;
@@ -243,7 +255,6 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
                 tile.GetComponent<TileCmponent>().indexX = xTileIndex;
                 tile.GetComponent<TileCmponent>().indexZ = zTileIndex;
                 tile.GetComponent<TileGeneration>().terrainTypes = b.getTerrainTypes();
-                tile.GetComponent<TileGeneration>().heightMultiplier = b.heightMultiplier;
                 tilesList.Add(tile);
             }
         }

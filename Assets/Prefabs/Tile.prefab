@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7056696702166676704}
   - component: {fileID: 7056696702166676707}
   - component: {fileID: 5141055208451106441}
+  - component: {fileID: 355659257356903138}
   m_Layer: 13
   m_Name: Tile
   m_TagString: Untagged
@@ -92,7 +93,7 @@ MeshCollider:
   m_GameObject: {fileID: 7056696702166676705}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -125,7 +126,6 @@ MonoBehaviour:
   tileRenderer: {fileID: 7056696702166676709}
   meshFilter: {fileID: 7056696702166676708}
   mapScale: 1
-  heightMultiplier: 7
   terrainTypes:
   - name: water
     height: 0.1
@@ -156,4 +156,24 @@ MonoBehaviour:
   biome:
     name: 
     waterLevel: 0
+    heightMultiplier: 0
+    heightCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     terrainTypes: []
+--- !u!65 &355659257356903138
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056696702166676705}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 10, y: 2.220446e-16, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}

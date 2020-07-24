@@ -150,8 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ce8ec93a16f2e40ba52f56665ea919, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidthInTiles: 7
-  mapDepthInTiles: 7
+  mapWidthInTiles: 2
+  mapDepthInTiles: 2
   tilePrefab: {fileID: 7056696702166676705, guid: 275fdabfbdc175242bac25058a1f0964,
     type: 3}
   tilesList:
@@ -207,6 +207,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  tileSize: {x: 1, y: 1, z: 1}
   waves:
   - seed: 803069
     frequency: 1
@@ -217,34 +218,34 @@ MonoBehaviour:
   - seed: 855893
     frequency: 0.25
     amplitude: 4
-  heightCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   biomes:
   - name: swamp
     waterLevel: -47.8
     heightMultiplier: 4
+    heightCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     terrainTypes:
     - name: water
       height: 0.1
@@ -261,6 +262,30 @@ MonoBehaviour:
   - name: desert
     waterLevel: -74
     heightMultiplier: 2
+    heightCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     terrainTypes:
     - name: water
       height: 0.1
@@ -274,6 +299,13 @@ MonoBehaviour:
     - name: mountain
       height: 0.8
       color: {r: 0.65882355, g: 0.18890388, b: 0, a: 0}
+  currentHeightMultiplier: 0
+  currentHeightCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   maxZPerRowE:
   - x: 0
     z: 6
@@ -1561,6 +1593,7 @@ MonoBehaviour:
   deathExplosion: {fileID: 1248331578108354, guid: db2ecaf942d8bf944a83c862f185a169,
     type: 3}
   currentDistance: 0
+  state: 0
 --- !u!4 &952954180
 Transform:
   m_ObjectHideFlags: 0
@@ -2480,7 +2513,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1561489995}
   - component: {fileID: 1561489997}
-  - component: {fileID: 1561489996}
   m_Layer: 1
   m_Name: BckgroundCamera
   m_TagString: Untagged
@@ -2502,14 +2534,6 @@ Transform:
   m_Father: {fileID: 963194228}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -12, y: 0, z: 0}
---- !u!81 &1561489996
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1561489994}
-  m_Enabled: 1
 --- !u!20 &1561489997
 Camera:
   m_ObjectHideFlags: 0
@@ -2547,7 +2571,7 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
-  m_AllowMSAA: 1
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
