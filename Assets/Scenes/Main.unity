@@ -150,8 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ce8ec93a16f2e40ba52f56665ea919, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidthInTiles: 2
-  mapDepthInTiles: 2
+  mapWidthInTiles: 1
+  mapDepthInTiles: 1
   tilePrefab: {fileID: 7056696702166676705, guid: 275fdabfbdc175242bac25058a1f0964,
     type: 3}
   tilesList:
@@ -208,6 +208,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   tileSize: {x: 1, y: 1, z: 1}
+  changeBiomeInSec: 5
   waves:
   - seed: 803069
     frequency: 1
@@ -221,7 +222,7 @@ MonoBehaviour:
   biomes:
   - name: swamp
     waterLevel: -47.8
-    heightMultiplier: 4
+    heightMultiplier: 11
     heightCurve:
       serializedVersion: 2
       m_Curve:
@@ -257,11 +258,11 @@ MonoBehaviour:
       height: 0.5
       color: {r: 0, g: 0.3301887, b: 0.021116689, a: 0}
     - name: mountain
-      height: 0.8
+      height: 1
       color: {r: 0, g: 0.6603774, b: 0.055878144, a: 0}
   - name: desert
     waterLevel: -74
-    heightMultiplier: 2
+    heightMultiplier: 7
     heightCurve:
       serializedVersion: 2
       m_Curve:
@@ -288,21 +289,39 @@ MonoBehaviour:
       m_RotationOrder: 4
     terrainTypes:
     - name: water
-      height: 0.1
+      height: 2
       color: {r: 0.2559185, g: 0.75746375, b: 0.764151, a: 0}
     - name: sand
       height: 0.5
-      color: {r: 1, g: 0.9039522, b: 0, a: 0}
+      color: {r: 1, g: 0.75964546, b: 0, a: 0}
     - name: grass
       height: 0.7
       color: {r: 0.90588236, g: 0.5940701, b: 0, a: 0}
     - name: mountain
-      height: 0.8
-      color: {r: 0.65882355, g: 0.18890388, b: 0, a: 0}
-  currentHeightMultiplier: 0
+      height: 1
+      color: {r: 0.65882355, g: 0.35439926, b: 0, a: 0}
+  currentHeightMultiplier: 17
   currentHeightCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -346,7 +365,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30206161}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -99.7, y: -75, z: 9}
+  m_LocalPosition: {x: -27, y: -75, z: 9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

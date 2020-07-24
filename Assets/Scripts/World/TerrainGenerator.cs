@@ -26,17 +26,21 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     public List<GameObject> tilesList;
     public Vector3 tileSize;
+    public float changeBiomeInSec;
+    private float newBiomeTimer;
+    private bool getNewBiome;
+
 
     public List<Wave> waves;
 
-   
-   // public TerrainType[] terrainTypes;
+
+    // public TerrainType[] terrainTypes;
     public List<Biome> biomes;
     public float currentHeightMultiplier;
     public AnimationCurve currentHeightCurve;
 
     public Dictionary<int, int> maxZPerRow;
-    public Dictionary<int, int> minZPerRow; 
+    public Dictionary<int, int> minZPerRow;
     public List<DicStruct> maxZPerRowE;
     public List<DicStruct> minZPerRowE;
     public int maxX;
@@ -48,7 +52,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     void Start()
     {
-
+        newBiomeTimer = 0;
         raycastLayerMask = LayerMask.GetMask("Terrain");
         // waves.ForEach(x => x.seed = UnityEngine.Random.Range(1, 900000));
         waves[0].seed = UnityEngine.Random.Range(5598, 6678);
@@ -60,39 +64,60 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         minZPerRow = new Dictionary<int, int>();
 
         tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size;
-       // biomes.ForEach(x => x.terrainTypes = new List<TerrainType>(terrainTypes));
+        // biomes.ForEach(x => x.terrainTypes = new List<TerrainType>(terrainTypes));
 
         GenerateMap(0, 0, mapWidthInTiles, mapDepthInTiles);
     }
 
     private void Update()
     {
-        if (Application.isEditor) {
+        if (Application.isEditor)
+        {
             showDictionariesInEditor();
         }
 
         if (PlayerBehaviour.Instance.GetState() == PlayerState.launched)
         {
+
+            RaycastHit hit;
+            if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
             {
-                RaycastHit hit;
-                if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
-                {
-                    checkAndExtendMap(hit.collider.gameObject);
-                }
+                checkAndExtendMap(hit.collider.gameObject);
             }
+
+            newBiomeTimer += Time.deltaTime;
+            if (newBiomeTimer >= changeBiomeInSec)
+            {
+                getNewBiome = true;
+                newBiomeTimer = 0;
+            }
+        }
+
+        if (Input.GetKeyDown("up"))
+        {
+            Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+            b.heightMultiplier = currentHeightMultiplier;
+            ExtendMap(0, 0, tilesList[0], b);
         }
     }
 
     private void checkAndExtendMap(GameObject currentTile)
     {
         TileCmponent tc = currentTile.GetComponent<TileCmponent>();
-
+        //   Debug.Log(">>>>> check tc > " + tc.indexX + "> " + tc.indexZ);
         if (maxZPerRow[tc.indexX] == tc.indexZ || minZPerRow[tc.indexX] == tc.indexZ
-            || tc.indexX == maxX || tc.indexX == minX)
+            || tc.indexX == maxX || tc.indexX == minX ||
+            maxZPerRow[tc.indexX] == tc.indexZ + 1 || minZPerRow[tc.indexX] == tc.indexZ - 1
+            || tc.indexX + 1 == maxX || tc.indexX - 1 == minX)
         {
-            Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
-            b.heightMultiplier = currentHeightMultiplier; 
-            ExtendMap(tc.indexX, tc.indexZ, currentTile, b);
+            if (getNewBiome)
+            {
+                Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+                b.heightMultiplier = currentHeightMultiplier;
+                ExtendMap(tc.indexX, tc.indexZ, currentTile, b);
+                getNewBiome = false;
+            }
+            ExtendMap(tc.indexX, tc.indexZ, currentTile, tc.biome);
         }
 
     }
@@ -106,7 +131,9 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             TileCmponent tc = t.GetComponent<TileCmponent>();
 
             if (tc.indexX == currX || tc.indexX == currX + 1 || tc.indexX == currX - 1 ||
-            tc.indexZ == currZ || tc.indexZ == currZ + 1 || tc.indexZ == currZ - 1)
+                    tc.indexX == currX + 2 || tc.indexX == currX - 2 ||
+                    tc.indexZ == currZ || tc.indexZ == currZ + 1 || tc.indexZ == currZ - 1 ||
+                    tc.indexZ == currZ + 2 || tc.indexZ == currZ - 2)
             {
                 res[tc.getCoordinates()] = t;
             }
@@ -150,89 +177,49 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         }
     }
 
-
-    private void ExtendMap(int indexX, int indexZ, GameObject currentTile, Biome b)
-    {
-
-        Dictionary<string, GameObject> neighbours = getExistingNeighbours(indexX, indexZ);
-
-        Transform currT = currentTile.GetComponent<Transform>();
-        if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ - 1)))
-        {
-            Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
-                                                    currT.position.y,
-                                                    currT.position.z - tileSize.z);
-            InstantiateTile(indexX + 1, indexZ - 1, tilePosition, b);
-        }
-
-        if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ)))
-        {
-            Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
-                                                 currT.position.y,
-                                                 currT.position.z);
-            InstantiateTile(indexX + 1, indexZ, tilePosition, b);
-        }
-
-        if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ + 1)))
-        {
-            Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
-                                                 currT.position.y,
-                                                 currT.position.z + tileSize.z);
-            InstantiateTile(indexX + 1, indexZ + 1, tilePosition, b);
-        }
-        if (!neighbours.ContainsKey("" + (indexX) + (indexZ - 1)))
-        {
-            Vector3 tilePosition = new Vector3(currT.position.x,
-                                                 currT.position.y,
-                                                 currT.position.z - tileSize.z);
-            InstantiateTile(indexX, indexZ - 1, tilePosition, b);
-        }
-        if (!neighbours.ContainsKey("" + (indexX) + (indexZ + 1)))
-        {
-            Vector3 tilePosition = new Vector3(currT.position.x,
-                                                   currT.position.y,
-                                                   currT.position.z + tileSize.z);
-            InstantiateTile(indexX, indexZ + 1, tilePosition, b);
-        }
-        if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ - 1)))
-        {
-            Vector3 tilePosition = new Vector3(currT.position.x - tileSize.x,
-                                                currT.position.y,
-                                                currT.position.z - tileSize.z);
-            InstantiateTile(indexX - 1, indexZ - 1, tilePosition, b);
-        }
-        if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ)))
-        {
-            Vector3 tilePosition = new Vector3(currT.position.x - tileSize.x,
-                                                 currT.position.y,
-                                                 currT.position.z);
-            InstantiateTile(indexX - 1, indexZ, tilePosition, b);
-        }
-
-        if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ + 1)))
-        {
-            Vector3 tilePosition22 = new Vector3(currT.position.x - tileSize.x,
-                                                 currT.position.y,
-                                                 currT.position.z + tileSize.z);
-            InstantiateTile(indexX - 1, indexZ + 1, tilePosition22, b);
-        }
-    }
-
-    private void InstantiateTile(int indexX, int indexZ, Vector3 tilePosition22, Biome b)
+    private void InstantiateTile(int indexX, int indexZ, Vector3 tilePosition22, Biome b, Dictionary<string, GameObject> neighbours)
     {
         GameObject t = Instantiate(tilePrefab, tilePosition22, Quaternion.identity) as GameObject;
         t.GetComponent<TileCmponent>().setCoordinates(indexX, indexZ);
         t.GetComponent<TileCmponent>().biome = b;
-        t.GetComponent<TileGeneration>().terrainTypes = b.getTerrainTypes();
+        t.GetComponent<TileGeneration>().mainTerrainTypes = b.getTerrainTypes();
 
+
+        if (neighbours.ContainsKey("" + (indexX + 1) + indexZ) &&
+            neighbours["" + (indexX + 1) + indexZ].GetComponent<TileCmponent>().biome != b)
+        {
+            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
+                neighbours["" + (indexX + 1) + indexZ].GetComponent<TileGeneration>().mainTerrainTypes;
+        }
+        if (neighbours.ContainsKey("" + (indexX - 1) + indexZ) &&
+            neighbours["" + (indexX - 1) + indexZ].GetComponent<TileCmponent>().biome != b)
+        {
+            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
+                neighbours["" + (indexX - 1) + indexZ].GetComponent<TileGeneration>().mainTerrainTypes;
+        }
+        if (neighbours.ContainsKey("" + indexX + (indexZ - 1)) &&
+            neighbours["" + indexX + (indexZ - 1)].GetComponent<TileCmponent>().biome != b)
+        {
+            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
+                neighbours["" + indexX + (indexZ - 1)].GetComponent<TileGeneration>().mainTerrainTypes;
+        }
+        if (neighbours.ContainsKey("" + indexX + (indexZ + 1)) &&
+            neighbours["" + "" + indexX + (indexZ + 1)].GetComponent<TileCmponent>().biome != b)
+        {
+            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
+                neighbours["" + indexX + (indexZ + 1)].GetComponent<TileGeneration>().mainTerrainTypes;
+        }
+
+        neighbours["" + indexX + indexZ] = t;
         tilesList.Add(t);
+
         updateMinMaxCoordinates(t.GetComponent<TileCmponent>());
     }
 
     void GenerateMap(float xOffset, float zOffset, int mapWidth, int mapDepth)
     {
         Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
-        this.currentHeightMultiplier = b.heightMultiplier;
+       // this.currentHeightMultiplier = b.heightMultiplier;
         this.currentHeightCurve = b.heightCurve;
 
         int tileWidth = (int)tileSize.x;
@@ -254,13 +241,14 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
                 GameObject tile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject;
                 tile.GetComponent<TileCmponent>().indexX = xTileIndex;
                 tile.GetComponent<TileCmponent>().indexZ = zTileIndex;
-                tile.GetComponent<TileGeneration>().terrainTypes = b.getTerrainTypes();
+                tile.GetComponent<TileCmponent>().biome = b;
+                tile.GetComponent<TileGeneration>().mainTerrainTypes = b.getTerrainTypes();
                 tilesList.Add(tile);
             }
         }
     }
 
-    private void showDictionariesInEditor ()
+    private void showDictionariesInEditor()
     {
         maxZPerRowE = new List<DicStruct>();
         minZPerRowE = new List<DicStruct>();
@@ -273,6 +261,199 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         {
             minZPerRowE.Add(new DicStruct(x, minZPerRow[x]));
         }
-   
+
     }
+
+    #region new tile positions
+    private void ExtendMap(int indexX, int indexZ, GameObject currentTile, Biome b)
+    {
+
+        Dictionary<string, GameObject> neighbours = getExistingNeighbours(indexX, indexZ);
+
+        Transform currT = currentTile.GetComponent<Transform>();
+        if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ - 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
+                                                    currT.position.y,
+                                                    currT.position.z - tileSize.z);
+
+            InstantiateTile(indexX + 1, indexZ - 1, tilePosition, b, neighbours);
+        }
+
+        if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z);
+            InstantiateTile(indexX + 1, indexZ, tilePosition, b, neighbours);
+        }
+
+        if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ + 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z + tileSize.z);
+            InstantiateTile(indexX + 1, indexZ + 1, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX) + (indexZ - 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x,
+                                                 currT.position.y,
+                                                 currT.position.z - tileSize.z);
+            InstantiateTile(indexX, indexZ - 1, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX) + (indexZ + 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x,
+                                                   currT.position.y,
+                                                   currT.position.z + tileSize.z);
+            InstantiateTile(indexX, indexZ + 1, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ - 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - tileSize.x,
+                                                currT.position.y,
+                                                currT.position.z - tileSize.z);
+            InstantiateTile(indexX - 1, indexZ - 1, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z);
+            InstantiateTile(indexX - 1, indexZ, tilePosition, b, neighbours);
+        }
+
+        if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ + 1)))
+        {
+            Vector3 tilePosition22 = new Vector3(currT.position.x - tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z + tileSize.z);
+            InstantiateTile(indexX - 1, indexZ + 1, tilePosition22, b, neighbours);
+        }
+
+        //second area
+
+        if (!neighbours.ContainsKey("" + (indexX + 2) + (indexZ)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z);
+            InstantiateTile(indexX + 2, indexZ, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX + 2) + (indexZ - 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z - tileSize.z);
+            InstantiateTile(indexX + 2, indexZ - 1, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX + 2) + (indexZ + 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z + tileSize.z);
+            InstantiateTile(indexX + 2, indexZ + 1, tilePosition, b, neighbours);
+        }
+
+        if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ - 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z - 2 * tileSize.z);
+            InstantiateTile(indexX - 1, indexZ - 2, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ - 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z - 2 * tileSize.z);
+            InstantiateTile(indexX + 1, indexZ - 2, tilePosition, b, neighbours);
+        }
+
+        if (!neighbours.ContainsKey("" + (indexX) + (indexZ - 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x,
+                                                 currT.position.y,
+                                                 currT.position.z - 2 * tileSize.z);
+            InstantiateTile(indexX, indexZ - 2, tilePosition, b, neighbours);
+        }
+
+        ///
+        if (!neighbours.ContainsKey("" + (indexX) + (indexZ + 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x,
+                                                   currT.position.y,
+                                                   currT.position.z + 2 * tileSize.z);
+            InstantiateTile(indexX, indexZ + 2, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX - 1) + (indexZ + 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - tileSize.x,
+                                                   currT.position.y,
+                                                   currT.position.z + 2 * tileSize.z);
+            InstantiateTile(indexX - 1, indexZ + 2, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX + 1) + (indexZ + 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + tileSize.x,
+                                                   currT.position.y,
+                                                   currT.position.z + 2 * tileSize.z);
+            InstantiateTile(indexX + 1, indexZ + 2, tilePosition, b, neighbours);
+        }
+
+        //
+        if (!neighbours.ContainsKey("" + (indexX - 2) + (indexZ)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z);
+            InstantiateTile(indexX - 2, indexZ, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX - 2) + (indexZ - 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z - tileSize.z);
+            InstantiateTile(indexX - 2, indexZ - 1, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX - 2) + (indexZ + 1)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z + tileSize.z);
+            InstantiateTile(indexX - 2, indexZ + 1, tilePosition, b, neighbours);
+        }
+
+        if (!neighbours.ContainsKey("" + (indexX - 2) + (indexZ - 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z - 2 * tileSize.z);
+            InstantiateTile(indexX - 2, indexZ - 2, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX - 2) + (indexZ + 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x - 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z + 2 * tileSize.z);
+            InstantiateTile(indexX - 2, indexZ + 2, tilePosition, b, neighbours);
+        }
+
+        if (!neighbours.ContainsKey("" + (indexX + 2) + (indexZ + 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z + 2 * tileSize.z);
+            InstantiateTile(indexX + 2, indexZ + 2, tilePosition, b, neighbours);
+        }
+        if (!neighbours.ContainsKey("" + (indexX + 2) + (indexZ - 2)))
+        {
+            Vector3 tilePosition = new Vector3(currT.position.x + 2 * tileSize.x,
+                                                 currT.position.y,
+                                                 currT.position.z - 2 * tileSize.z);
+            InstantiateTile(indexX + 2, indexZ - 2, tilePosition, b, neighbours);
+        }
+    }
+    #endregion
 }
