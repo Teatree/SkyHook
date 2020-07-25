@@ -50,6 +50,8 @@ public class NoiseMapGeneration : MonoBehaviour
                 }
                 // normalize the noise value so that it is within 0 and 1
                 noise /= normalization;
+                //float normalizedHeight = (noise + 1) / (normalization / 0.95f);
+                //noiseMap[zIndex, xIndex] = Mathf.Clamp(normalizedHeight, 0, int.MaxValue);
 
                 noiseMap[zIndex, xIndex] = noise;
             }

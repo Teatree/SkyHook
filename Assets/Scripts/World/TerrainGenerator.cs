@@ -76,22 +76,22 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             showDictionariesInEditor();
         }
 
-        if (PlayerBehaviour.Instance.GetState() == PlayerState.launched)
-        {
+        //if (PlayerBehaviour.Instance.GetState() == PlayerState.launched)
+        //{
 
-            RaycastHit hit;
-            if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
-            {
-                checkAndExtendMap(hit.collider.gameObject);
-            }
+        //    RaycastHit hit;
+        //    if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
+        //    {
+        //        checkAndExtendMap(hit.collider.gameObject);
+        //    }
 
-            newBiomeTimer += Time.deltaTime;
-            if (newBiomeTimer >= changeBiomeInSec)
-            {
-                getNewBiome = true;
-                newBiomeTimer = 0;
-            }
-        }
+        //    newBiomeTimer += Time.deltaTime;
+        //    if (newBiomeTimer >= changeBiomeInSec)
+        //    {
+        //        getNewBiome = true;
+        //        newBiomeTimer = 0;
+        //    }
+        //}
 
         if (Input.GetKeyDown("up"))
         {

@@ -56,7 +56,7 @@ public class TileGeneration : MonoBehaviour
 
         Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
         tileTexture.wrapMode = TextureWrapMode.Clamp;
-        tileTexture.filterMode = FilterMode.Point;
+        tileTexture.filterMode = FilterMode.Bilinear;
         tileTexture.SetPixels(colorMap);
         tileTexture.Apply();
 

@@ -41,7 +41,11 @@ QualitySettings:
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 0}
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - Standalone
+    - iPhone
+    - Android
+    - WebGL
   - serializedVersion: 2
     name: Low
     pixelLightCount: 0
@@ -120,8 +124,6 @@ QualitySettings:
     excludedTargetPlatforms:
     - WebGL
     - Standalone
-    - iPhone
-    - Android
   - serializedVersion: 2
     name: High
     pixelLightCount: 2
@@ -161,7 +163,6 @@ QualitySettings:
     - Standalone
     - iPhone
     - Android
-    - WebGL
   - serializedVersion: 2
     name: Very High
     pixelLightCount: 3

@@ -12,6 +12,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public SphereCollider HookableArea;
     public Transform HookableAreaTransform;
     public LineRenderer hookLine;
+    public LineRenderer aimLine;
     public SphereCollider ClawableArea;
     public Transform ClawableAreaTransform;
     public LineRenderer ClawLine;
@@ -19,7 +20,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
     public GameObject deathExplosion;
     
     public float currentDistance = 2;
-    float currentSpeed;
+    public float currentSpeed;
     float speedBeforeHookableSaved;
     public PlayerState state;
     float hookTravelCounter = 0;
@@ -30,9 +31,12 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     Vector3 orbitPoint;
     int launchCoolDown;
-    float tapCoolDown;
+    //float tapCoolDown;
     Vector3 oldPositionSaved;
     Vector3 relativePosition;
+
+    Vector3 aimPosition;
+
     IEnumerator hookSendCouroutine;
     IEnumerator clawSendCouroutine;
     IEnumerator clawBackCouroutine;
@@ -55,11 +59,11 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         if (state == PlayerState.launched)
         {
             //currentSpeed += ((1 - Mathf.Pow(1 - currentSpeed / SessionController.Instance.PlayerSpeedMaxSpeedf, SessionController.Instance.PlayerSpeedIncreaseValuef))/100);
-            currentSpeed += 0.5f;
+            currentSpeed += 0.5f * Time.deltaTime;
 
             // Move Player
             cam.transform.position = Vector3.Lerp(cam.transform.position, new Vector3(transform.position.x, cam.transform.position.y, transform.position.z + 10), 0.06f);
-            transform.Translate(-Vector3.forward * currentSpeed/10 * Time.deltaTime, Space.Self);
+            transform.Translate(Vector3.forward * currentSpeed/10 * Time.deltaTime, Space.Self);
             transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         }
 
@@ -75,24 +79,26 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         oldPositionSaved = transform.position;
 
         //bad
-        tapCoolDown -= Time.deltaTime;
-        if (tapCoolDown <= 0 && HookableArea.gameObject.activeSelf == false && state == PlayerState.launched)
-        {
-            HookableArea.gameObject.SetActive(true);
-            ClawableArea.gameObject.SetActive(false);
-        }
+        //tapCoolDown -= Time.deltaTime;
+        //if (tapCoolDown <= 0 && HookableArea.gameObject.activeSelf == false && state == PlayerState.launched)
+        //{
+        //    HookableArea.gameObject.SetActive(true);
+        //    ClawableArea.gameObject.SetActive(false);
+        //}
     }
 
     void Rotate()
     {
         // keep at orbit distance
-        Vector3 orbitPos = Target.transform.position + (transform.position - Target.transform.position).normalized * PlayerData.Instance.OrbitDistance;
-        transform.position = Vector3.Lerp(transform.position, orbitPos, 0.01f);
+        //Vector3 orbitPos = Target.transform.position + (transform.position - Target.transform.position).normalized * PlayerData.Instance.OrbitDistance;
+        //transform.position = Vector3.Lerp(transform.position, orbitPos, 0.01f);
 
-        if(isClockwise) transform.RotateAround(Target.transform.position, Vector3.up, currentSpeed * Time.deltaTime);
-        else transform.RotateAround(Target.transform.position, -Vector3.up, currentSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, Target.transform.position, 1f);
 
-        transform.LookAt(Target.transform);
+        //if (isClockwise) transform.RotateAround(Target.transform.position, Vector3.up, currentSpeed * Time.deltaTime);
+        //else transform.RotateAround(Target.transform.position, -Vector3.up, currentSpeed * Time.deltaTime);
+
+        transform.LookAt(aimPosition);
     }
      
     void OnTap()
@@ -102,25 +108,46 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         if (Input.GetMouseButton(0) && state == PlayerState.orbit && launchCoolDown <= 0)
         {
             Time.timeScale = 0.25f;
+
+            aimLine.gameObject.SetActive(true);
+            Plane plane = new Plane(Vector3.up, 0);
+
+            float distance;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (plane.Raycast(ray, out distance))
+            {
+                aimPosition = ray.GetPoint(distance);
+                aimPosition.y = 10;
+
+                aimLine.SetPosition(0, transform.position);
+
+                Vector3 dir = aimPosition - transform.position;
+
+                aimLine.SetPosition(1, dir * 100);
+
+            }
         }
         else if (Input.GetMouseButtonUp(0) && state == PlayerState.orbit && launchCoolDown <= 0)
         {
+            aimLine.gameObject.SetActive(false);
             SwitchToLaunched();
         }
         else if (Input.GetMouseButtonUp(0) && Target != null && state == PlayerState.launched)
         {
+            aimLine.gameObject.SetActive(false);
             DetermineIfClockwise();
 
             hookLine.gameObject.SetActive(true);
             hookSendCouroutine = SendHook(0.01f); // Needs to be an actual hook value
             StartCoroutine(hookSendCouroutine);
         }
-        else if (Input.GetMouseButtonUp(0) && Target == null && state == PlayerState.launched && tapCoolDown <= 0)
-        {
-            tapCoolDown = 0.5f;
-            HookableArea.gameObject.SetActive(false);
-            ClawableArea.gameObject.SetActive(false);
-        }
+        //else if (Input.GetMouseButtonUp(0) && Target == null && state == PlayerState.launched && tapCoolDown <= 0)
+        //{
+        //    tapCoolDown = 0.5f;
+        //    HookableArea.gameObject.SetActive(false);
+        //    ClawableArea.gameObject.SetActive(false);
+        //}
+        //}
     }
 
     IEnumerator SendHook(float hookSpeed) {
@@ -231,7 +258,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
         Time.timeScale = 1f;
         Target.GetComponent<Hookable>().SetOriginalColour();
-        SpinnerSpawnController.Instance.ForceMoveSpinner(Target);
+        //SpinnerSpawnController.Instance.ForceMoveSpinner(Target);
         Target = null;
 
         HookableArea.gameObject.SetActive(true);
@@ -243,7 +270,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public void SwitchToOrbit()
     {
-        currentSpeed = speedBeforeHookableSaved + 1;
+        currentSpeed = speedBeforeHookableSaved + 1 * Time.deltaTime;
 
         SessionController.Instance.IncreaseThePush();
         state = PlayerState.orbit;
@@ -277,13 +304,13 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
 
     public void CollisionEnter()
     {
-        GameObject v = Instantiate(deathExplosion);
-        v.transform.position = transform.position;
-
-        state = PlayerState.dead;
-        gameObject.SetActive(false);
-
-        SessionController.Instance.RestartGame();
+        //GameObject v = Instantiate(deathExplosion);
+        //v.transform.position = transform.position;
+        //
+        //state = PlayerState.dead;
+        //gameObject.SetActive(false);
+        //
+        //SessionController.Instance.RestartGame();
     }
 
     public void CollisionExit()
@@ -321,23 +348,23 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         //res[2] = transform.TransformPoint((-Vector3.forward * 30) - (Vector3.right * 17.5f));                                                                                      
         //res[3] = transform.TransformPoint((-Vector3.forward * 45) + (Vector3.right * 17.5f));
 
-        res[0] = transform.TransformPoint(-Vector3.forward * 30);
+        res[0] = transform.TransformPoint(Vector3.forward * 30);
         res[0].x -= 25;
         res[0].z -= 20;
 
-        res[1] = transform.TransformPoint(-Vector3.forward * 30);
+        res[1] = transform.TransformPoint(Vector3.forward * 30);
         res[1].x += 25;
         res[1].z -= 20;
 
-        res[2] = transform.TransformPoint(-Vector3.forward * 30);
+        res[2] = transform.TransformPoint(Vector3.forward * 30);
         res[2].x -= 25;
         res[2].z += 20;
 
-        res[3] = transform.TransformPoint(-Vector3.forward * 30);
+        res[3] = transform.TransformPoint(Vector3.forward * 30);
         res[3].x += 25;
         res[3].z += 20;
 
-        res[4] = transform.TransformPoint(-Vector3.forward * 60); //This last point is just for identifying a position right in front of Player, useful for placing clues as stuff...
+        res[4] = transform.TransformPoint(Vector3.forward * 60); //This last point is just for identifying a position right in front of Player, useful for placing clues as stuff...
 
         return res;
     }

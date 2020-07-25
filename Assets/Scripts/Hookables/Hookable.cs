@@ -23,13 +23,13 @@ public class Hookable : MonoBehaviour
     void Start()
     {
         originalColor = transform.gameObject.GetComponent<Renderer>().material.GetColor("_EmissionColor");
-        GetComponent<Rigidbody>().velocity = Random.onUnitSphere * (Random.Range(minPush, maxPush) * 2);
+        //GetComponent<Rigidbody>().velocity = Random.onUnitSphere * (Random.Range(minPush, maxPush) * 2);
     }
 
     private void Update()
     {
         //transform.Rotate(0, spinnerSpinSpeed * Time.deltaTime, 0);
-        transform.LookAt(PlayerBehaviour.Instance.transform);
+        //transform.LookAt(PlayerBehaviour.Instance.transform);
     }
 
     public int GetCoins()
