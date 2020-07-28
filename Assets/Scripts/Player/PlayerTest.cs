@@ -1,16 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerTest : SceneSingleton<PlayerTest>
 {
     public enum PlayerState { orbit, launched, dead, sendingHook }
     public PlayerState state;
-    public GameObject hookable;
+    public GameObject hookable; 
     public LineRenderer aimLine;
     public LineRenderer hookLine;
     public Camera MainCamera;
     public float currentSpeed;
+
+    public GameObject joyStickGo;
+    public GameObject tapGo;
 
     Vector3 aimPosition;
     Vector3 oldPositionSaved;
@@ -22,18 +26,57 @@ public class PlayerTest : SceneSingleton<PlayerTest>
     // Start is called before the first frame update
     void Start()
     {
+        currentSpeed = 0.1f;
         PlayerTest.Instance.state = PlayerState.orbit;
+        //joyStickGo.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(state == PlayerState.launched)
-        {
-            MovePlayer(targetPositon);
-        }
+        //if(state == PlayerState.launched)
+        //{
+        //    MovePlayer(targetPositon);
+        //}
 
-        OnTap();
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    tapGo.SetActive(false);
+        //    joyStickGo.SetActive(true);
+        //}
+
+        ////Joystick Movement
+        //if(CrossPlatformInputManager.GetAxis("Horizontal") > 0)
+        //{
+        //    if (CrossPlatformInputManager.GetAxis("Vertical") > 0)
+        //    {
+        //        Vector3 moveVec = new Vector3(1, 0, 1) * currentSpeed;
+        //        transform.Translate(moveVec);
+        //    }
+        //    else if (CrossPlatformInputManager.GetAxis("Vertical") < 0)
+        //    {
+        //        Vector3 moveVec = new Vector3(1, 0, -1) * currentSpeed;
+        //        transform.Translate(moveVec);
+        //    }
+        //}
+        //else if (CrossPlatformInputManager.GetAxis("Horizontal") < 0)
+        //{
+        //    if (CrossPlatformInputManager.GetAxis("Vertical") > 0)
+        //    {
+        //        Vector3 moveVec = new Vector3(-1, 0, 1) * currentSpeed;
+        //        transform.Translate(moveVec);
+        //    }
+        //    else if (CrossPlatformInputManager.GetAxis("Vertical") < 0)
+        //    {
+        //        Vector3 moveVec = new Vector3(-1, 0, -1) * currentSpeed;
+        //        transform.Translate(moveVec);
+        //    }
+        //}
+
+        //transform.position = new Vector3(Mathf.Clamp(transform.position.x, -10, 10), transform.position.y, transform.position.z);
+        //transform.position = new Vector3(transform.position.x, transform.position.y, Mathf.Clamp(transform.position.z, -8, 32));
+
+        //OnTap();
     }
 
     void OnTap()

@@ -2,36 +2,76 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackgroundCameraMovement : MonoBehaviour
+public class BackgroundCameraMovement : SceneSingleton<BackgroundCameraMovement>
 {
+    public enum CameraState { idle, moving, initialPull }
+    CameraState camState;
+    IEnumerator initialPullCouroutine;
     float currentCamSpeed;
     float idleCamSpeed;
 
     void Start()
     {
-        idleCamSpeed = 0.003f;
+        idleCamSpeed = 0.9f;
         currentCamSpeed = idleCamSpeed;
+
+        SetState(CameraState.idle);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("currentCamSpeed: " + currentCamSpeed);
-        if (PlayerTest.Instance.state == PlayerTest.PlayerState.launched)
+        if(camState == CameraState.idle)
         {
-            currentCamSpeed = PlayerTest.Instance.currentSpeed / 150;
-            //currentCamSpeed = PlayerTest.Instance.GetDistance() / PlayerTest.Instance.currentSpeed / 100;
-            //Debug.Log("currentCamSpeed: " + currentCamSpeed);
+            transform.Translate(Vector3.forward * currentCamSpeed * Time.deltaTime, Space.World);
+            transform.position = new Vector3(transform.position.x, 80, transform.position.z);
         }
-        else
+        else if (camState == CameraState.initialPull)
         {
-            currentCamSpeed = idleCamSpeed;
+            
+        }else if (camState == CameraState.moving)
+        {
+            transform.Translate(Vector3.forward * currentCamSpeed * Time.deltaTime, Space.World);
+            transform.position = new Vector3(transform.position.x, 80, transform.position.z);
+        }
+    }
+
+    public void PerformInitialPull(float time)
+    {
+        currentCamSpeed = 30f; // this will need to become actual speed
+        SetState(CameraState.initialPull);
+
+        initialPullCouroutine = InitialPull(time);
+        StartCoroutine(initialPullCouroutine);
+    }
+
+    IEnumerator InitialPull(float time)
+    {
+        float counter = 0;
+
+        while (counter < time)
+        {
+            counter += Time.deltaTime;
+
+            transform.Translate(Vector3.forward * currentCamSpeed * Time.deltaTime, Space.World);
+
+            yield return null;
         }
 
-        Vector3 v = PlayerTest.Instance.targetPositon;
-        v.y = 140;
-        transform.Translate(v * currentCamSpeed * Time.deltaTime, Space.World);
-        transform.position = new Vector3(transform.position.x, 140, transform.position.z);
-        
+        // switch to move state
+        SetState(CameraState.moving);
+        currentCamSpeed = 20f;
+
+        counter = 0;
+    }
+
+    public void SetState(CameraState c)
+    {
+        camState = c;
+    }
+
+    public void SetFieldOfVIew(float v)
+    {
+        GetComponent<Camera>().fieldOfView = v;
     }
 }
