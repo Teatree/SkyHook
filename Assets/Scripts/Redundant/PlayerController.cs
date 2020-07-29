@@ -57,7 +57,7 @@ public class PlayerController : SceneSingleton<PlayerController>
                 //
                 //transform.position = centerPoint + (normalizedDirection * 10f);
 
-                transform.LookAt(Hook.Instance.targetPosSaved);
+               // transform.LookAt(Hook.Instance.targetPosSaved);
                 transform.eulerAngles = new Vector3(-130, transform.eulerAngles.y, transform.eulerAngles.z);
 
                 //transform.position = new Vector3(transform.position.x, 10, transform.position.z);

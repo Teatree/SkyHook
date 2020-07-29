@@ -46,7 +46,7 @@ public class PlayerBehaviour : SceneSingleton<PlayerBehaviour>
         state = PlayerState.orbit;
         cam.transform.position = new Vector3(Target.transform.position.x, cam.transform.position.y, Target.transform.position.z+10);
 
-        currentSpeed = PlayerData.Instance.IntitialSpeed;
+        //currentSpeed = Player.Instance.IntitialSpeed;
     }
      
     void Update()

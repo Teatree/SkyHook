@@ -11,4 +11,9 @@ public abstract class StateMachine : MonoBehaviour
         State = state;
         StartCoroutine(State.Start());
     }
+
+    public void Update()
+    {
+        State.OnUpdate();
+    }
 }

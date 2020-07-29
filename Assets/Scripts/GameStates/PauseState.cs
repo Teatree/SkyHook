@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveState : State {
+public class PauseState : State {
 
-    public MoveState(GameSystem gameSystem) : base(gameSystem)
+    public PauseState(GameSystem system) : base(system)
     {
-
     }
 }

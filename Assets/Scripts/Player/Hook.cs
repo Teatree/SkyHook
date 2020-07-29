@@ -6,21 +6,19 @@ public class Hook : SceneSingleton<Hook>
 {
     IEnumerator hookSendCouroutine;
     LineRenderer hookLine;
-    public Vector3 targetPosSaved;
+    Vector3 targetPosSaved;
+    Vector3 targetPosMoved;
+    float _counter;
 
     void Start()
     {
         hookLine = GetComponent<LineRenderer>();
     }
 
-    public Vector3 GeneratePosition()
-    {
-        return new Vector3(0, 10, 300);// forward from the Player
-    }
-
     public void SendHook(float t)
     {
-        Vector3 pos = GeneratePosition();
+        Vector3 pos = LevelSystem.Instance.GenerateEndPoint();
+        hookLine.positionCount = 2;
 
         hookSendCouroutine = SendHookCouroutine(t, pos);
         StartCoroutine(hookSendCouroutine);
@@ -43,12 +41,38 @@ public class Hook : SceneSingleton<Hook>
             yield return null;
         }
 
+        targetPosMoved = targetPosSaved;
+
         counter = 0;
     }
 
     public void SetHookPos(Vector3 pos)
     {
         hookLine.SetPosition(0, pos);
-        hookLine.SetPosition(1, targetPosSaved);
+        hookLine.SetPosition(1, targetPosMoved);
+    }
+
+    public Vector3 GetHookPos()
+    {
+        return transform.position;
+    }
+
+    public void PullHookPos(Vector3 pos, float timeToPull)
+    {
+        if (_counter < timeToPull)
+        {
+            _counter += Time.deltaTime;
+            targetPosMoved = Vector3.Lerp(targetPosSaved, pos, _counter / timeToPull);
+        }
+    }
+
+    public void ClearPositions()
+    {
+        hookLine.positionCount = 0;
+    }
+
+    public Vector3 GetTargetPosSaved()
+    {
+        return targetPosSaved;
     }
 }

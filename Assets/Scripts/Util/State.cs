@@ -1,24 +1,19 @@
 ﻿using System.Collections;
 
 public abstract class State {
-    protected readonly GameSystem _system;
+    public readonly GameSystem GameSystem;
 
     public State(GameSystem system)
     {
-        _system = system;
+        GameSystem = system;
+    }
+
+    public virtual void OnUpdate()
+    {
+
     }
 
     public virtual IEnumerator Start()
-    {
-        yield break;
-    }
-
-    public virtual IEnumerator Attack()
-    {
-        yield break;
-    }
-
-    public virtual IEnumerator Heal()
     {
         yield break;
     }

@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : SceneSingleton<Player>
-{
-    [SerializeField] private float currentSpeed;
 
-    public void Move()
+public class Player : SceneSingleton<Player> {
+    public int CoinsAmountTotal;
+    public float OrbitDistance = 5.0f;
+    public float IntitialSpeed = 0.5f;
+
+    public Vector3 GetPosition()
     {
-        // input and stuff I guess
+        return transform.position;
     }
 }
+

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HookState : State
-{
+
+public class HookState : State {
+
     public HookState(GameSystem gameSystem) : base(gameSystem)
     {
 
@@ -11,6 +12,8 @@ public class HookState : State
 
     public override IEnumerator Start()
     {
+        GameSystem.WindParticlesGo.SetActive(true);
+
         float counter = 0;
         float timeToHook = GameSystem.TIME_TO_HOOK;
         float timeToPull = GameSystem.TIME_TO_PULL;
@@ -21,10 +24,6 @@ public class HookState : State
         while (counter < timeToHook)
         {
             counter += Time.deltaTime;
-
-            // zoom out
-            Camera.main.fieldOfView = Mathf.Lerp(17, 27, counter / timeToHook);
-            BackgroundCameraMovement.Instance.SetFieldOfVIew(Mathf.Lerp(45, 60, counter / timeToHook));
 
             yield return null;
         }
@@ -39,6 +38,10 @@ public class HookState : State
         {
             counter += Time.deltaTime;
 
+            // zoom out
+            Camera.main.fieldOfView = Mathf.Lerp(17, 27, counter / timeToPull);
+            BackgroundCameraMovement.Instance.SetFieldOfVIew(Mathf.Lerp(45, 60, counter / timeToPull));
+
             // move player
             Vector3 leftEdge = Camera.main.ViewportToWorldPoint(new Vector3(-165, 1, Camera.main.nearClipPlane));
             Vector3 rightEdge = Camera.main.ViewportToWorldPoint(new Vector3(165, 1, Camera.main.nearClipPlane));
@@ -52,18 +55,9 @@ public class HookState : State
             yield return null;
         }
 
-        // switch to move state
-        //SetState(PlayerState.moving);
         GameSystem.SetState(new MoveState(GameSystem));
 
         counter = 0;
-
-        // start moving
-
-
-        // perform initial pull
-        //windParticleEffect.SetActive(true);
-
-        
     }
 }
+

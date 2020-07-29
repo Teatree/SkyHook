@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : State
-{
-    public IdleState(GameSystem gameSystem) : base(gameSystem)
+public class DeadState : State {
+
+    public DeadState(GameSystem system) : base(system)
     {
 
     }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SphereMover : MonoBehaviour
 {
-
     // Update is called once per frame
     void Update()
     {
