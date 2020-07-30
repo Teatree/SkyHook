@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using static PlayerBehaviour;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public struct DicStruct
@@ -34,7 +35,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
     public List<Biome> biomes;
 
     public GameObject tilePrefab;
-
+    public GameObject water; 
 
     public Vector2[] waveOffsets;
     public float maxPossibleHeight;
@@ -67,6 +68,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         
         GenerateMap(0, 0, mapWidthInTiles, mapDepthInTiles);
     }
+
 
     private void Update()
     {
@@ -218,11 +220,22 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     void GenerateMap(float xOffset, float zOffset, int mapWidth, int mapDepth)
     {
-        NoiseMapGeneration.Instance.GenerateNewWaves(0, 0);
+      
         Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
-       // this.currentHeightMultiplier = b.heightMultiplier;
+        this.currentHeightMultiplier = b.heightMultiplier;
         this.currentHeightCurve = b.heightCurve;
 
+        this.lacunarity = Random.Range(b.lacunarityMin, b.lacunarityMax);
+        this.persistence = Random.Range(b.persistenceMin, b.persistenceMax);
+        this.noiseScale = Random.Range(b.noiseScaleMin, b.lacunarityMax);
+        this.numOfWaves = b.numOfWaves;
+        float waterLevel = Random.Range(b.waterLevelMin, b.waterLevelMax);
+        
+        NoiseMapGeneration.Instance.GenerateNewWaves(0, 0);
+        var position = water.transform.position;
+        position = new Vector3(position.x, waterLevel, position.z);
+        water.transform.position = position;
+        
         int tileWidth = (int)tileSize.x;
         int tileDepth = (int)tileSize.z;
 
@@ -247,6 +260,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
                 tilesList.Add(tile);
             }
         }
+        
     }
 
     private void showDictionariesInEditor()

@@ -185,7 +185,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   biomes:
   - name: swamp
-    waterLevel: -47.8
+    waterLevel: -68
     heightMultiplier: 11
     heightCurve:
       serializedVersion: 2
@@ -225,7 +225,7 @@ MonoBehaviour:
       height: 1
       color: {r: 0.8726415, g: 0.9332144, b: 1, a: 0}
   - name: desert
-    waterLevel: -74
+    waterLevel: -73
     heightMultiplier: 7
     heightCurve:
       serializedVersion: 2
@@ -266,6 +266,7 @@ MonoBehaviour:
       color: {r: 0.65882355, g: 0.35439926, b: 0, a: 0}
   tilePrefab: {fileID: 7056696702166676705, guid: 275fdabfbdc175242bac25058a1f0964,
     type: 3}
+  water: {fileID: 9176057473752238738}
   waveOffsets: []
   maxPossibleHeight: 0
   noiseMapGeneration: {fileID: 30206164}
