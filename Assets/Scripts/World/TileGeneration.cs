@@ -4,17 +4,12 @@ using UnityEngine;
 
 public class TileGeneration : MonoBehaviour
 {
-    [SerializeField]
-    public NoiseMapGeneration noiseMapGeneration;
 
     [SerializeField]
     public MeshRenderer tileRenderer;
 
     [SerializeField]
     public MeshFilter meshFilter;
-
-
-    public float mapScale;
 
     public List<TerrainType> mainTerrainTypes;
     public List<TerrainType> secondaryTerrainTypes;
@@ -29,7 +24,7 @@ public class TileGeneration : MonoBehaviour
         float offsetX = -this.gameObject.transform.position.x / transform.localScale.x;
         float offsetZ = -this.gameObject.transform.position.z / transform.localScale.z;
 
-        float[,] heightMap = this.noiseMapGeneration.GenerateNoiseMap(tileDepth, tileWidth, this.mapScale, offsetX, offsetZ, TerrainGenerator.Instance.waves);
+        float[,] heightMap = TerrainGenerator.Instance.noiseMapGeneration.GenerateNoiseMap(tileDepth, tileWidth, offsetX, offsetZ);
 
         Texture2D tileTexture = BuildTexture(heightMap);
         this.tileRenderer.material.mainTexture = tileTexture;
@@ -56,7 +51,7 @@ public class TileGeneration : MonoBehaviour
 
         Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
         tileTexture.wrapMode = TextureWrapMode.Clamp;
-        tileTexture.filterMode = FilterMode.Point;
+        //tileTexture.filterMode = FilterMode.Point;
         tileTexture.SetPixels(colorMap);
         tileTexture.Apply();
 
@@ -87,7 +82,6 @@ public class TileGeneration : MonoBehaviour
         this.meshFilter.mesh.RecalculateBounds();
         this.meshFilter.mesh.RecalculateNormals();
     }
-
 
 
     TerrainType ChooseTerrainType(float height)

@@ -20,24 +20,28 @@ public struct DicStruct
 
 public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 {
-    public int mapWidthInTiles, mapDepthInTiles;
+    [Header("Noise setup")]
+    public int mapWidthInTiles;
+    public int mapDepthInTiles;
+    public float lacunarity;
+    [Range(0, 1)]
+    public float persistence;
+    public int numOfWaves; 
+    public int seed;
+    public float noiseScale;
+    public float currentHeightMultiplier;
+    public AnimationCurve currentHeightCurve;
+    public List<Biome> biomes;
 
     public GameObject tilePrefab;
 
+
+    public Vector2[] waveOffsets;
+    public float maxPossibleHeight;
+    public NoiseMapGeneration noiseMapGeneration;
+
     public List<GameObject> tilesList;
     public Vector3 tileSize;
-    public float changeBiomeInSec;
-    private float newBiomeTimer;
-    private bool getNewBiome;
-
-
-    public List<Wave> waves;
-
-
-    // public TerrainType[] terrainTypes;
-    public List<Biome> biomes;
-    public float currentHeightMultiplier;
-    public AnimationCurve currentHeightCurve;
 
     public Dictionary<int, int> maxZPerRow;
     public Dictionary<int, int> minZPerRow;
@@ -52,52 +56,48 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     void Start()
     {
-        newBiomeTimer = 0;
         raycastLayerMask = LayerMask.GetMask("Terrain");
-        // waves.ForEach(x => x.seed = UnityEngine.Random.Range(1, 900000));
-        waves[0].seed = UnityEngine.Random.Range(5598, 6678);
-        waves[1].seed = UnityEngine.Random.Range(9598, 13678);
-        waves[2].seed = UnityEngine.Random.Range(6598, 7678);
-
+       
         tilesList = new List<GameObject>();
         maxZPerRow = new Dictionary<int, int>();
         minZPerRow = new Dictionary<int, int>();
 
         tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size;
         // biomes.ForEach(x => x.terrainTypes = new List<TerrainType>(terrainTypes));
-
+        
         GenerateMap(0, 0, mapWidthInTiles, mapDepthInTiles);
     }
 
     private void Update()
     {
-        if (Application.isEditor)
-        {
-            showDictionariesInEditor();
-        }
+        //if (Application.isEditor)
+        //{
+        //    showDictionariesInEditor();
+        //}
 
-        if (PlayerBehaviour.Instance.GetState() == PlayerState.launched)
-        {
+        //if (PlayerBehaviour.Instance.GetState() == PlayerState.launched)
+        //{
 
-            RaycastHit hit;
-            if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
-            {
-                checkAndExtendMap(hit.collider.gameObject);
-            }
+        //    RaycastHit hit;
+        //    if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
+        //    {
+        //        checkAndExtendMap(hit.collider.gameObject);
+        //    }
 
-            newBiomeTimer += Time.deltaTime;
-            if (newBiomeTimer >= changeBiomeInSec)
-            {
-                getNewBiome = true;
-                newBiomeTimer = 0;
-            }
-        }
+        //    newBiomeTimer += Time.deltaTime;
+        //    if (newBiomeTimer >= changeBiomeInSec)
+        //    {
+        //        getNewBiome = true;
+        //        newBiomeTimer = 0;
+        //    }
+        //}
 
         if (Input.GetKeyDown("up"))
         {
             Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
             b.heightMultiplier = currentHeightMultiplier;
-            ExtendMap(0, 0, tilesList[0], b);
+            GenerateMap(0, 0, mapWidthInTiles, mapDepthInTiles);
+            // ExtendMap(0, 0, tilesList[0], b);
         }
     }
 
@@ -110,13 +110,13 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             maxZPerRow[tc.indexX] == tc.indexZ + 1 || minZPerRow[tc.indexX] == tc.indexZ - 1
             || tc.indexX + 1 == maxX || tc.indexX - 1 == minX)
         {
-            if (getNewBiome)
-            {
-                Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
-                b.heightMultiplier = currentHeightMultiplier;
-                ExtendMap(tc.indexX, tc.indexZ, currentTile, b);
-                getNewBiome = false;
-            }
+            //if (getNewBiome)
+            //{
+            //    Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+            //    b.heightMultiplier = currentHeightMultiplier;
+            //    ExtendMap(tc.indexX, tc.indexZ, currentTile, b);
+            //    getNewBiome = false;
+            //}
             ExtendMap(tc.indexX, tc.indexZ, currentTile, tc.biome);
         }
 
@@ -218,6 +218,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     void GenerateMap(float xOffset, float zOffset, int mapWidth, int mapDepth)
     {
+        NoiseMapGeneration.Instance.GenerateNewWaves(0, 0);
         Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
        // this.currentHeightMultiplier = b.heightMultiplier;
         this.currentHeightCurve = b.heightCurve;
@@ -456,4 +457,12 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         }
     }
     #endregion
+
+    private void OnValidate()
+    {
+         if (noiseScale <= 0)
+        {
+            noiseScale = 0.001f;
+        }
+    }
 }

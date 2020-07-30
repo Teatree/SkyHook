@@ -2,67 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoiseMapGeneration : MonoBehaviour
+public class NoiseMapGeneration : SceneSingleton<NoiseMapGeneration>
 {
-    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float scale)
+
+    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float offsetX, float offsetZ)
     {
-        // create an empty noise map with the mapDepth and mapWidth coordinates
         float[,] noiseMap = new float[mapDepth, mapWidth];
+        float amplitude, frequency;
 
         for (int zIndex = 0; zIndex < mapDepth; zIndex++)
         {
             for (int xIndex = 0; xIndex < mapWidth; xIndex++)
             {
-                // calculate sample indices based on the coordinates and the scale
-                float sampleX = xIndex / scale;
-                float sampleZ = zIndex / scale;
-
-                // generate noise value using PerlinNoise
-                float noise = Mathf.PerlinNoise(sampleX, sampleZ);
-
-                noiseMap[zIndex, xIndex] = noise;
-            }
-        }
-
-        return noiseMap;
-    }
-
-    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float scale, float offsetX, float offsetZ, List<Wave> waves)
-    {
-        // create an empty noise map with the mapDepth and mapWidth coordinates
-        float[,] noiseMap = new float[mapDepth, mapWidth];
-
-        for (int zIndex = 0; zIndex < mapDepth; zIndex++)
-        {
-            for (int xIndex = 0; xIndex < mapWidth; xIndex++)
-            {
-                // calculate sample indices based on the coordinates, the scale and the offset
-                float sampleX = (xIndex + offsetX) / scale;
-                float sampleZ = (zIndex + offsetZ) / scale;
-
                 float noise = 0f;
-                float normalization = 0f;
-                foreach (Wave wave in waves)
-                {
-                    // generate noise value using PerlinNoise for a given Wave
-                    noise += wave.amplitude * Mathf.PerlinNoise(sampleX * wave.frequency + wave.seed, sampleZ * wave.frequency + wave.seed);
-                    normalization += wave.amplitude;
-                }
-                // normalize the noise value so that it is within 0 and 1
-                noise /= normalization;
+                amplitude = 1;
+                frequency = 1;
 
+                float sampleX = (xIndex + offsetX) / TerrainGenerator.Instance.noiseScale;
+                float sampleZ = (zIndex + offsetZ) / TerrainGenerator.Instance.noiseScale;
+
+                for (int i = 0; i < TerrainGenerator.Instance.numOfWaves; i++)
+                {
+
+                    float _sampleX = (sampleX * frequency + TerrainGenerator.Instance.waveOffsets[i].x) ;
+                    float _sampleZ = (sampleZ * frequency + TerrainGenerator.Instance.waveOffsets[i].x);
+
+                    noise += amplitude * Mathf.PerlinNoise(_sampleX, _sampleZ);
+                    amplitude *= TerrainGenerator.Instance.persistence;
+                    frequency *= TerrainGenerator.Instance.lacunarity;
+                }
+                noise /= TerrainGenerator.Instance.maxPossibleHeight;
+               
                 noiseMap[zIndex, xIndex] = noise;
             }
         }
-
         return noiseMap;
     }
-}
 
-[System.Serializable]
-public class Wave
-{
-    public float seed;
-    public float frequency;
-    public float amplitude;
+    public float GenerateNewWaves(float offsetX, float offsetZ)
+    {
+        float amplitude = 1;
+        TerrainGenerator.Instance.waveOffsets = new Vector2[TerrainGenerator.Instance.numOfWaves];
+        System.Random prng = new System.Random(TerrainGenerator.Instance.seed);
+        float maxPossibleHeight = 0;
+        for (int i = 0; i < TerrainGenerator.Instance.numOfWaves; i++)
+        {
+            float _offsetX = prng.Next(-100000, 100000) + offsetX;
+            float _offsetY = prng.Next(-100000, 100000) - offsetZ;
+            TerrainGenerator.Instance.waveOffsets[i] = new Vector2(_offsetX, _offsetY);
+            maxPossibleHeight += amplitude;
+            amplitude *= TerrainGenerator.Instance.persistence;
+        }
+        TerrainGenerator.Instance.maxPossibleHeight = maxPossibleHeight;
+        return maxPossibleHeight;
+    }
 }
