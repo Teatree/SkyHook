@@ -53,7 +53,7 @@ public class MoveState : State {
 
         Hook.Instance.SetHookPos(transform.position);
         Hook.Instance.PullHookPos(transform.position, 10);
-        LevelSystem.Instance.MoveLevel(10);
+        LevelSystem.Instance.MoveLevel(20);
 
         if(Vector3.Distance(transform.position, LevelSystem.Instance.SpinnerGo.transform.position) < 50)
         {

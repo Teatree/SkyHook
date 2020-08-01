@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipBehaviour : MonoBehaviour
+public class ShipBehaviour : MonoBehaviour 
 {
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        PlayerBehaviour.Instance.CollisionEnter();
+        if (other.GetComponent<ItemTest>() != null)
+        {
+            Player.Instance.OnTriggerEnt();
+        }
+        else
+        {
+            Player.Instance.OnTriggerDead();
+        }
     }
-    
 }

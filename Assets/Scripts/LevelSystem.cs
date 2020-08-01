@@ -22,7 +22,7 @@ public class LevelSystem : SceneSingleton<LevelSystem>
     // place the end point thing there too
     public Vector3 GenerateEndPoint()
     {
-        generatedPoint = new Vector3(0, 10, 500);
+        generatedPoint = new Vector3(0, 10, 1000);
         SpinnerGo.SetActive(true);
         SpinnerGo.transform.position = generatedPoint;
         pointToMoveTo = transform.position - generatedPoint;

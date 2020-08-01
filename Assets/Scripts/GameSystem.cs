@@ -9,7 +9,10 @@ public class GameSystem : StateMachine {
     public const float TIME_TO_HOOK = 1.4f;
     public const float TIME_TO_PULL = 0.4f;
 
+    public static GameSystem Instance;
+
     [SerializeField] public GameObject WindParticlesGo;
+    [SerializeField] public GameObject DeathParticle;
     [SerializeField] private GameObject playerPrefab;
 
     private Player player;
@@ -20,10 +23,18 @@ public class GameSystem : StateMachine {
 
     private void Start()
     {
+        if (Instance == null) Instance = this;
+
         player = playerPrefab.GetComponent<Player>();
         InitialPlayerPos = player.GetPosition();
 
         SetState(new IdleState(this));
+    }
+
+    public void PlayDeathParticle()
+    {
+        DeathParticle.transform.position = player.GetPosition();
+        DeathParticle.GetComponent<ParticleSystem>().Play();
     }
 }
 
