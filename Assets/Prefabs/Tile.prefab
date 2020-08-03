@@ -114,7 +114,8 @@ MonoBehaviour:
   indexZ: 0
   biome:
     name: 
-    waterLevel: 0
+    waterLevelMin: -69
+    waterLevelMax: -44
     heightMultiplier: 0
     heightCurve:
       serializedVersion: 2
@@ -122,6 +123,13 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+    persistenceMin: 0.3
+    persistenceMax: 0.5
+    lacunarityMin: 3
+    lacunarityMax: 11
+    numOfWaves: 5
+    noiseScaleMin: 7
+    noiseScaleMax: 21
     terrainTypes: []
 --- !u!65 &355659257356903138
 BoxCollider:

@@ -25,7 +25,7 @@ public class TileGeneration : MonoBehaviour
         float offsetZ = -this.gameObject.transform.position.z / transform.localScale.z;
 
         float[,] heightMap = TerrainGenerator.Instance.noiseMapGeneration.GenerateNoiseMap(tileDepth, tileWidth, offsetX, offsetZ);
-
+        heightMap = terraceOrSmt(heightMap);
         Texture2D tileTexture = BuildTexture(heightMap);
         this.tileRenderer.material.mainTexture = tileTexture;
 
@@ -51,12 +51,38 @@ public class TileGeneration : MonoBehaviour
 
         Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
         tileTexture.wrapMode = TextureWrapMode.Clamp;
-        //tileTexture.filterMode = FilterMode.Point;
+        // tileTexture.filterMode = FilterMode.Point;
         tileTexture.SetPixels(colorMap);
         tileTexture.Apply();
 
         return tileTexture;
     }
+    
+    private static float[,] terraceOrSmt(float[,] heightMap)
+    {
+        int tileDepth = heightMap.GetLength(0);
+        int tileWidth = heightMap.GetLength(1);
+
+        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
+        {
+            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
+            {
+                float height = heightMap[zIndex, xIndex];
+
+                //  float terraceHeight = 2 * (0.5f - Mathf.Abs(0.5f - heightMap[zIndex, xIndex]));
+                //  terraceHeight *= TerrainGenerator.Instance.currentHeightMultiplier;
+                float terraceHeight = Mathf.Pow(height, 2.1f);
+                
+                terraceHeight = (Mathf.Round(terraceHeight * TerrainGenerator.Instance.terraces)) /
+                                TerrainGenerator.Instance.terraces;
+                Debug.Log("> height > " + terraceHeight);
+                heightMap[zIndex, xIndex] = terraceHeight;
+            }
+        }
+
+        return heightMap;
+    }
+    
     private void UpdateMeshVertices(float[,] heightMap)
     {
         int tileDepth = heightMap.GetLength(0);

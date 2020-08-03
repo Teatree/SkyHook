@@ -30,6 +30,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
     public int numOfWaves; 
     public int seed;
     public float noiseScale;
+    public int terraces = 4;
     public float currentHeightMultiplier;
     public AnimationCurve currentHeightCurve;
     public List<Biome> biomes;
@@ -80,11 +81,11 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         //if (PlayerBehaviour.Instance.GetState() == PlayerState.launched)
         //{
 
-        //    RaycastHit hit;
-        //    if (Physics.Raycast(PlayerBehaviour.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
-        //    {
-        //        checkAndExtendMap(hit.collider.gameObject);
-        //    }
+        RaycastHit hit;
+        if (Physics.Raycast(Player.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
+        {
+            checkAndExtendMap(hit.collider.gameObject);
+        }
 
         //    newBiomeTimer += Time.deltaTime;
         //    if (newBiomeTimer >= changeBiomeInSec)
@@ -221,7 +222,8 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
     void GenerateMap(float xOffset, float zOffset, int mapWidth, int mapDepth)
     {
       
-        Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+        // Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
+        Biome b = biomes[1];
         this.currentHeightMultiplier = b.heightMultiplier;
         this.currentHeightCurve = b.heightCurve;
 
@@ -229,13 +231,10 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         this.persistence = Random.Range(b.persistenceMin, b.persistenceMax);
         this.noiseScale = Random.Range(b.noiseScaleMin, b.lacunarityMax);
         this.numOfWaves = b.numOfWaves;
-        float waterLevel = Random.Range(b.waterLevelMin, b.waterLevelMax);
-        
         NoiseMapGeneration.Instance.GenerateNewWaves(0, 0);
-        var position = water.transform.position;
-        position = new Vector3(position.x, waterLevel, position.z);
-        water.transform.position = position;
         
+        setupWater(b);
+
         int tileWidth = (int)tileSize.x;
         int tileDepth = (int)tileSize.z;
 
@@ -261,6 +260,16 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             }
         }
         
+    }
+
+    private void setupWater(Biome b)
+    {
+        float waterLevel = Random.Range(b.waterLevelMin, b.waterLevelMax);
+       
+        var position = water.transform.position;
+        position = new Vector3(position.x, waterLevel, position.z);
+        water.transform.position = position;
+        water.transform.GetComponent<MeshRenderer>().material.SetColor("_DepthGradientDeep", b.waterColour);
     }
 
     private void showDictionariesInEditor()

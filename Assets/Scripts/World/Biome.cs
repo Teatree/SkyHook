@@ -6,7 +6,8 @@ using System.Linq;
 [System.Serializable]
 public class Biome 
 {
-    public string name; 
+    public string name;
+    public Color waterColour; 
     public float waterLevelMin = -69f;
     public float waterLevelMax = -44;
     public float heightMultiplier; //Used only for the initial map generation
