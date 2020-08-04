@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MoveState : State {
 
+    public Vector3 pos;
+    public Vector3 dir;
+
     public MoveState(GameSystem gameSystem) : base(gameSystem)
     {
 
@@ -25,40 +28,57 @@ public class MoveState : State {
 
     public override void OnUpdate()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            SavePosition();
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            // input and stuff I guess
-            Vector3 leftEdge = Camera.main.ViewportToWorldPoint(new Vector3(-165, 1, Camera.main.nearClipPlane));
-            Vector3 rightEdge = Camera.main.ViewportToWorldPoint(new Vector3(165, 1, Camera.main.nearClipPlane));
+        // Get Direction on Joystick
+        dir = JoystickController.Instance.GetDirection();
+        dir.z = -dir.y;
 
-            Plane plane = new Plane(Vector3.up, 0);
+        // Translate direction from Joystick to Player's world direction
+        Vector3 lookAtPos = Player.Instance.transform.position + dir;
+        lookAtPos.y = Player.Instance.transform.position.y;
 
-            float distance;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (plane.Raycast(ray, out distance))
-            {
-                Vector3 t = ray.GetPoint(distance) - startDragSaved;
+        Player.Instance.transform.LookAt(lookAtPos);
 
-                transform.position = startDragPlayerPosSaved + t;
-                transform.position = Vector3.Lerp(transform.position, new Vector3(Mathf.Clamp(transform.localPosition.x, leftEdge.x, rightEdge.x), 10, Mathf.Clamp(transform.position.z, 5, 7)), 0.98f); // -17, 34
+        // Constantly move Player at a consistent speed in the direction
+        Player.Instance.transform.Translate(Vector3.forward * 10 * Time.deltaTime, Space.Self);
 
-                //transform.LookAt(Hook.Instance.GetTargetPosSaved());
-                //transform.eulerAngles = new Vector3(-130, transform.eulerAngles.y, transform.eulerAngles.z);
-            }  
-        }
+        // Update Camera's position to follow
+        Camera.main.transform.position = new Vector3(Player.Instance.transform.position.x, 120, Player.Instance.transform.position.z - 100);
 
-        Hook.Instance.SetHookPos(transform.position);
-        Hook.Instance.PullHookPos(transform.position, 10);
-        LevelSystem.Instance.MoveLevel(20);
 
-        if(Vector3.Distance(transform.position, LevelSystem.Instance.SpinnerGo.transform.position) < 50)
-        {
-            GameSystem.SetState(new FinishedState(GameSystem));
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    SavePosition();
+        //}
+        //else if (Input.GetMouseButton(0))
+        //{
+        //    // input and stuff I guess
+        //    Vector3 leftEdge = Camera.main.ViewportToWorldPoint(new Vector3(-165, 1, Camera.main.nearClipPlane));
+        //    Vector3 rightEdge = Camera.main.ViewportToWorldPoint(new Vector3(165, 1, Camera.main.nearClipPlane));
+
+        //    Plane plane = new Plane(Vector3.up, 0);
+
+        //    float distance;
+        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //    if (plane.Raycast(ray, out distance))
+        //    {
+        //        Vector3 t = ray.GetPoint(distance) - startDragSaved;
+
+        //        transform.position = startDragPlayerPosSaved + t;
+        //        transform.position = Vector3.Lerp(transform.position, new Vector3(Mathf.Clamp(transform.localPosition.x, leftEdge.x, rightEdge.x), 10, Mathf.Clamp(transform.position.z, 5, 7)), 0.98f); // -17, 34
+
+        //        //transform.LookAt(Hook.Instance.GetTargetPosSaved());
+        //        //transform.eulerAngles = new Vector3(-130, transform.eulerAngles.y, transform.eulerAngles.z);
+        //    }  
+        //}
+
+        //Hook.Instance.SetHookPos(transform.position);
+        //Hook.Instance.PullHookPos(transform.position, 10);
+        //LevelSystem.Instance.MoveLevel(20);
+
+        //if(Vector3.Distance(transform.position, LevelSystem.Instance.SpinnerGo.transform.position) < 50)
+        //{
+        //    GameSystem.SetState(new FinishedState(GameSystem));
+        //}
     }
 
     public void SavePosition()

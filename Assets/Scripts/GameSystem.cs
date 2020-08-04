@@ -28,7 +28,7 @@ public class GameSystem : StateMachine {
         player = playerPrefab.GetComponent<Player>();
         InitialPlayerPos = player.GetPosition();
 
-        SetState(new IdleState(this));
+        SetState(new MoveState(this));
     }
 
     public void PlayDeathParticle()

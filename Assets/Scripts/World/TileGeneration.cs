@@ -75,7 +75,7 @@ public class TileGeneration : MonoBehaviour
                 
                 terraceHeight = (Mathf.Round(terraceHeight * TerrainGenerator.Instance.terraces)) /
                                 TerrainGenerator.Instance.terraces;
-                Debug.Log("> height > " + terraceHeight);
+                //Debug.Log("> height > " + terraceHeight);
                 heightMap[zIndex, xIndex] = terraceHeight;
             }
         }
