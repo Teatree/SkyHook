@@ -151,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ce8ec93a16f2e40ba52f56665ea919, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapWidthInTiles: 5
-  mapDepthInTiles: 9
+  mapWidthInTiles: 3
+  mapDepthInTiles: 3
   lacunarity: 8
   persistence: 0.305
   numOfWaves: 5
@@ -268,13 +268,13 @@ MonoBehaviour:
     noiseScaleMax: 21
     terrainTypes:
     - height: 0.09
-      color: {r: 1, g: 0.82879776, b: 0.2971698, a: 0}
+      color: {r: 0.7169812, g: 0.711392, b: 0.18600929, a: 0}
     - height: 0.125
-      color: {r: 1, g: 0.70070094, b: 0, a: 0}
+      color: {r: 0.90588236, g: 0.83299714, b: 0.21960783, a: 0}
     - height: 0.375
-      color: {r: 1, g: 0.6570526, b: 0, a: 0}
+      color: {r: 0.98039216, g: 0.6562282, b: 0.22745097, a: 0}
     - height: 0.5
-      color: {r: 0.9137255, g: 0.43529412, b: 0, a: 0}
+      color: {r: 0.8962264, g: 0.42695767, b: 0, a: 0}
     - height: 0.625
       color: {r: 0.6039216, g: 0.19215687, b: 0, a: 0}
     - height: 0.75
@@ -5764,7 +5764,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324862185}
-  m_Mesh: {fileID: 6339110513867660364, guid: cb00d270cce9d1747b3cfbf9018c02b8, type: 3}
+  m_Mesh: {fileID: 6339110513867660364, guid: f5e9419bf7f683a4188f81dda3602fb3, type: 3}
 --- !u!114 &1324862191
 MonoBehaviour:
   m_ObjectHideFlags: 0

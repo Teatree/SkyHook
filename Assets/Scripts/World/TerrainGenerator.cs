@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.WSA;
 using static PlayerBehaviour;
 using Random = UnityEngine.Random;
 
@@ -54,8 +55,6 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     private int raycastLayerMask;
 
-
-
     void Start()
     {
         raycastLayerMask = LayerMask.GetMask("Terrain");
@@ -85,6 +84,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         if (Physics.Raycast(Player.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
         {
             checkAndExtendMap(hit.collider.gameObject);
+            removeOldTiles(hit.collider.GetComponent<TileCmponent>().indexX, hit.collider.GetComponent<TileCmponent>().indexZ);
         }
 
         //    newBiomeTimer += Time.deltaTime;
@@ -121,11 +121,23 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             //    getNewBiome = false;
             //}
             ExtendMap(tc.indexX, tc.indexZ, currentTile, tc.biome);
+            
         }
-
     }
 
-
+    private void removeOldTiles(int indexX, int indexZ)
+    {
+        foreach (GameObject tile in tilesList)
+        {
+            if (tile.GetComponent<TileCmponent>().indexX < indexX - 3
+                || tile.GetComponent<TileCmponent>().indexZ < indexZ - 3)
+            {
+                tilesList.Remove(tile);
+                Destroy(tile);
+            } 
+        }
+    }
+    
     private Dictionary<string, GameObject> getExistingNeighbours(int currX, int currZ)
     {
         Dictionary<string, GameObject> res = new Dictionary<string, GameObject>();
