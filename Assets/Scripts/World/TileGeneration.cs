@@ -14,6 +14,7 @@ public class TileGeneration : MonoBehaviour
     public List<TerrainType> mainTerrainTypes;
     public List<TerrainType> secondaryTerrainTypes;
 
+    private List<GameObject> myTrees = new List<GameObject>();
 
     void GenerateTile()
     {
@@ -28,7 +29,6 @@ public class TileGeneration : MonoBehaviour
         heightMap = terraceOrSmt(heightMap);
         Texture2D tileTexture = BuildTexture(heightMap);
         this.tileRenderer.material.mainTexture = tileTexture;
-
         UpdateMeshVertices(heightMap);
     }
 
@@ -100,6 +100,17 @@ public class TileGeneration : MonoBehaviour
                 Vector3 vertex = meshVertices[vertexIndex];
                 meshVertices[vertexIndex] = new Vector3(vertex.x, TerrainGenerator.Instance.currentHeightCurve.Evaluate(height) * TerrainGenerator.Instance.currentHeightMultiplier, vertex.z);
 
+                if (height < 0.1f)
+                {
+                    GameObject tree = ItemsPool.Instance.getItem();
+                    if (tree != null)
+                    {
+                        // tree.transform.parent = this.transform;
+                        tree.transform.position = new Vector3(this.transform.position.x + vertex.x + 1,vertex.y,this.transform.position.z + vertex.z);
+                        tree.SetActive(true);
+                        myTrees.Add(tree);
+                    }
+                }
                 vertexIndex++;
             }
         }
@@ -154,6 +165,14 @@ public class TileGeneration : MonoBehaviour
     void Start()
     {
         GenerateTile();
+    }
+    
+    public void DeactivateItems()
+    {
+        foreach (var t in myTrees)
+        {
+            t.SetActive(false);
+        }
     }
 }
 

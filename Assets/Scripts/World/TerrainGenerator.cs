@@ -133,6 +133,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
                 || tile.GetComponent<TileCmponent>().indexZ < indexZ - 3)
             {
                 tilesList.Remove(tile);
+                tile.GetComponent<TileGeneration>().DeactivateItems();
                 Destroy(tile);
             } 
         }
@@ -500,4 +501,6 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
             noiseScale = 0.001f;
         }
     }
+
+ 
 }
