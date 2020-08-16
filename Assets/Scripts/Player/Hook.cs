@@ -17,10 +17,10 @@ public class Hook : SceneSingleton<Hook>
 
     public void SendHook(float t)
     {
-        Vector3 pos = LevelSystem.Instance.GenerateEndPoint();
+        //Vector3 pos = LevelSystem.Instance.GenerateEndPoint();
         hookLine.positionCount = 2;
 
-        hookSendCouroutine = SendHookCouroutine(t, pos);
+        //hookSendCouroutine = SendHookCouroutine(t, pos);
         StartCoroutine(hookSendCouroutine);
     }
 

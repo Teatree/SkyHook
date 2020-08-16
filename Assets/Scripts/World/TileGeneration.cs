@@ -106,9 +106,9 @@ public class TileGeneration : MonoBehaviour
                     if (tree != null)
                     {
                         // tree.transform.parent = this.transform;
-                        tree.transform.position = new Vector3(this.transform.position.x + vertex.x + 1,vertex.y,this.transform.position.z + vertex.z);
-                        tree.SetActive(true);
-                        myTrees.Add(tree);
+                        //tree.transform.position = new Vector3(this.transform.position.x + vertex.x + 1,vertex.y + transform.position.y,this.transform.position.z + vertex.z);
+                        //tree.SetActive(true);
+                        //myTrees.Add(tree);
                     }
                 }
                 vertexIndex++;
@@ -118,6 +118,9 @@ public class TileGeneration : MonoBehaviour
         this.meshFilter.mesh.vertices = meshVertices;
         this.meshFilter.mesh.RecalculateBounds();
         this.meshFilter.mesh.RecalculateNormals();
+
+        DestroyImmediate(this.GetComponent<MeshCollider>()); // TODO: SOOOO NOT OPTIMAL, OMG
+        gameObject.AddComponent<MeshCollider>();
     }
 
 

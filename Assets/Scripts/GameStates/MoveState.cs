@@ -21,7 +21,7 @@ public class MoveState : State {
         transform = GameSystem.Player.transform;
         SavePosition();
         //terrible
-        LevelSystem.Instance.ResetMoveCounter();
+        //LevelSystem.Instance.ResetMoveCounter();
 
         yield return null;
     }
@@ -39,10 +39,10 @@ public class MoveState : State {
         Player.Instance.transform.LookAt(lookAtPos);
 
         // Constantly move Player at a consistent speed in the direction
-        Player.Instance.transform.Translate(Vector3.forward * 10 * Time.deltaTime, Space.Self);
+        Player.Instance.transform.Translate(Vector3.forward * 10 * Player.CurrentSpeedIncrement * Time.deltaTime, Space.Self);
 
         // Update Camera's position to follow
-        Camera.main.transform.position = new Vector3(Player.Instance.transform.position.x, 120, Player.Instance.transform.position.z - 100);
+        Camera.main.transform.position = new Vector3(Player.Instance.transform.position.x, 120, Player.Instance.transform.position.z - 90);
 
 
         //if (Input.GetMouseButtonDown(0))

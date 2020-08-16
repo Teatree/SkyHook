@@ -10,9 +10,13 @@ public class ShipBehaviour : MonoBehaviour
         {
             Player.Instance.OnTriggerEnt();
         }
-        else
+        else if(other.GetComponent<BadItemTest>() != null)
         {
             Player.Instance.OnTriggerDead();
+        }
+        else
+        {
+            GameSystem.Instance.SetState(new FinishedState(GameSystem.Instance));
         }
     }
 }
