@@ -6,7 +6,7 @@ public class HookCollisionAreaBehaviour : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("colliding: ", other);
+        //Debug.Log("colliding: ", other);
         if (other.GetComponent<Item>() != null)
         {
             Player.Instance.CollideWithItem(other.gameObject);

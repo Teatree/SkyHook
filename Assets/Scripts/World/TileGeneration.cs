@@ -60,25 +60,25 @@ public class TileGeneration : MonoBehaviour
     
     private static float[,] terraceOrSmt(float[,] heightMap)
     {
-        int tileDepth = heightMap.GetLength(0);
-        int tileWidth = heightMap.GetLength(1);
+        //int tileDepth = heightMap.GetLength(0);
+        //int tileWidth = heightMap.GetLength(1);
 
-        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
-        {
-            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
-            {
-                float height = heightMap[zIndex, xIndex];
+        //for (int zIndex = 0; zIndex < tileDepth; zIndex++)
+        //{
+        //    for (int xIndex = 0; xIndex < tileWidth; xIndex++)
+        //    {
+        //        float height = heightMap[zIndex, xIndex];
 
-                //  float terraceHeight = 2 * (0.5f - Mathf.Abs(0.5f - heightMap[zIndex, xIndex]));
-                //  terraceHeight *= TerrainGenerator.Instance.currentHeightMultiplier;
-                float terraceHeight = Mathf.Pow(height, 2.1f);
+        //        //  float terraceHeight = 2 * (0.5f - Mathf.Abs(0.5f - heightMap[zIndex, xIndex]));
+        //        //  terraceHeight *= TerrainGenerator.Instance.currentHeightMultiplier;
+        //        float terraceHeight = Mathf.Pow(height, 2.1f);
                 
-                terraceHeight = (Mathf.Round(terraceHeight * TerrainGenerator.Instance.terraces)) /
-                                TerrainGenerator.Instance.terraces;
-                //Debug.Log("> height > " + terraceHeight);
-                heightMap[zIndex, xIndex] = terraceHeight;
-            }
-        }
+        //        terraceHeight = (Mathf.Round(terraceHeight * TerrainGenerator.Instance.terraces)) /
+        //                        TerrainGenerator.Instance.terraces;
+        //        //Debug.Log("> height > " + terraceHeight);
+        //        heightMap[zIndex, xIndex] = terraceHeight;
+        //    }
+        //}
 
         return heightMap;
     }

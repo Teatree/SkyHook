@@ -95,7 +95,7 @@ public class Item : MonoBehaviour
     {
         if (isMovingUpwards == false)
         {
-            HooKMeCouroutine = MoveUpdwardsToPlayer(2f);
+            HooKMeCouroutine = MoveUpdwardsToPlayer(1f);
             StartCoroutine(HooKMeCouroutine);
             isMovingUpwards = true;
         }

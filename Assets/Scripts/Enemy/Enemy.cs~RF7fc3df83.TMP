@@ -39,4 +39,9 @@ public class Enemy : MonoBehaviour
             //transform.position = transform.position + dirNormalized * 7 * Time.deltaTime;
         }
     }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
 }
