@@ -23,6 +23,8 @@ public class FinishedState : State {
 
         // display win screen
 
+        Player.Instance.SetTargetable(false);
+
         while (counter < timeToFinish)
         {
             counter += Time.deltaTime;

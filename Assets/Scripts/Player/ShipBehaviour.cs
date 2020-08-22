@@ -6,15 +6,15 @@ public class ShipBehaviour : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<ItemTest>() != null)
+        if (other.GetComponent<Item>() != null)
         {
             Player.Instance.OnTriggerEnt();
         }
-        else if(other.GetComponent<BadItemTest>() != null)
+        else if(other.GetComponent<Enemy>() != null)
         {
             Player.Instance.OnTriggerDead();
         }
-        else
+        else if(other.gameObject.layer == 14)
         {
             GameSystem.Instance.SetState(new FinishedState(GameSystem.Instance));
         }

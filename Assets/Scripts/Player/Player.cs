@@ -9,8 +9,10 @@ public class Player : SceneSingleton<Player> {
     public int CoinsAmountTotal;
     public float OrbitDistance = 5.0f;
     public float IntitialSpeed = 0.5f;
+    public bool targetable = true;
 
     public GameObject PickUpParticle;
+    public Transform ShipTransform;
     public GameObject CompassArrow; //Temporary
 
     Vector3 spawnPosition;
@@ -31,17 +33,17 @@ public class Player : SceneSingleton<Player> {
             CurrentSpeedIncrement += 0.03f;
             counter = 0;
         }
+    }
 
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 90, LayerMask.GetMask("Hookable")))
-        {
-            hit.transform.GetComponent<ItemTest>().KillMe();
-        }
+    public void CollideWithItem(GameObject g)
+    {
+        Debug.Log("yup, I see you: ", g);
+        g.transform.GetComponent<Item>().KillMe();
     }
 
     public Vector3 GetPosition()
     {
-        return transform.position;
+        return ShipTransform.position;
     }
 
     public Vector3 GetHomePositionRange()
@@ -55,6 +57,16 @@ public class Player : SceneSingleton<Player> {
         if(CompassArrow.activeSelf == false) CompassArrow.SetActive(true);
 
         CompassArrow.transform.LookAt(target);
+    }
+
+    public bool GetTargetable()
+    {
+        return targetable;
+    }
+
+    public void SetTargetable(bool b)
+    {
+        targetable = b;
     }
 
     public void OnTriggerEnt()

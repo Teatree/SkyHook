@@ -2,27 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemTest : MonoBehaviour 
+public class Item : MonoBehaviour 
 {
     Vector3 dirNormalized;
     bool shouldFall = true;
 
     IEnumerator HooKMeCouroutine;
+    IEnumerator FallCoroutine;
     bool isMovingUpwards = false;
-
-    private void OnTriggerEnter(Collider c)
-    {
-        Destroy(gameObject);
-    }
 
     private void Start()
     {
         // place on the floor
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 90, LayerMask.GetMask("Terrain")))
-        {
-            transform.position = new Vector3(hit.point.x, hit.point.y + 2, hit.point.z);
-        }
+        //RaycastHit hit;
+        //if (Physics.Raycast(transform.position, Vector3.down, out hit, 90, LayerMask.GetMask("Terrain")))
+        //{
+        //    transform.position = new Vector3(hit.point.x, hit.point.y + 2, hit.point.z);
+        //}
     }
 
     private void Update()
@@ -39,15 +35,40 @@ public class ItemTest : MonoBehaviour
             //transform.position = transform.position + dirNormalized * 7 * Time.deltaTime;
         }
 
-        if (shouldFall)
+        if (isMovingUpwards == false)
         {
             RaycastHit hit;
             if (Physics.Raycast(transform.position, Vector3.down, out hit, 90, LayerMask.GetMask("Terrain")))
             {
-                transform.position = new Vector3(hit.point.x, hit.point.y + 2, hit.point.z);
-                shouldFall = false;
+                if (shouldFall == true)
+                {
+                    FallCoroutine = FallDown(1);
+                    StartCoroutine(FallCoroutine);
+
+                    shouldFall = false;
+                }
             }
         }
+    }
+
+    IEnumerator FallDown(float time)
+    {
+        //Debug.Log("moving?");
+        float counter = 0;
+        while (counter < time)
+        {
+            counter += Time.deltaTime;
+
+            yield return null;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 90, LayerMask.GetMask("Terrain")))
+        {
+            transform.position = new Vector3(hit.point.x, hit.point.y + 2, hit.point.z);
+        }
+
+        counter = 0;
     }
 
     IEnumerator MoveUpdwardsToPlayer(float time)
@@ -56,14 +77,16 @@ public class ItemTest : MonoBehaviour
         float counter = 0;
         while (counter < time)
         {
-            counter += Time.deltaTime;
+            counter += Time.deltaTime / time;
            
             //somewhere here we will also need to figure out interseption course for moving hookables
-            Vector3 newTargetPos = Vector3.Lerp(transform.position, Player.Instance.GetPosition(), counter / time);
+            Vector3 newTargetPos = Vector3.Lerp(transform.position, Player.Instance.GetPosition(), counter);
             transform.position = newTargetPos;
 
             yield return null;
         }
+
+        Destroy(gameObject);
 
         counter = 0;
     }
@@ -72,7 +95,7 @@ public class ItemTest : MonoBehaviour
     {
         if (isMovingUpwards == false)
         {
-            HooKMeCouroutine = MoveUpdwardsToPlayer(5);
+            HooKMeCouroutine = MoveUpdwardsToPlayer(2f);
             StartCoroutine(HooKMeCouroutine);
             isMovingUpwards = true;
         }
