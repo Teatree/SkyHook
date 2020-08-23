@@ -33,10 +33,7 @@ public class MoveState : State {
         dir.z = -dir.y;
 
         // Translate direction from Joystick to Player's world direction
-        Vector3 lookAtPos = Player.Instance.transform.position + dir;
-        lookAtPos.y = Player.Instance.transform.position.y;
-
-        Player.Instance.transform.LookAt(lookAtPos);
+        Player.Instance.UpdateDirecionIndicator(dir);
 
         // Constantly move Player at a consistent speed in the direction
         Player.Instance.transform.Translate(Vector3.forward * 10 * Player.CurrentSpeedIncrement * Time.deltaTime, Space.Self);

@@ -8,11 +8,11 @@ public class ShipBehaviour : MonoBehaviour
     {
         if (other.GetComponent<Item>() != null)
         {
-            Player.Instance.OnTriggerEnt();
+            //Player.Instance.OnTriggerEnt();
         }
-        else if(other.GetComponent<Enemy>() != null)
+        else if(other.GetComponent<EnemyBird>() != null)
         {
-            Player.Instance.OnTriggerDead();
+            //Player.Instance.OnTriggerDead();
         }
         else if(other.gameObject.layer == 14)
         {

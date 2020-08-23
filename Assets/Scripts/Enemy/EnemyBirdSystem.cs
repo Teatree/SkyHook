@@ -17,13 +17,13 @@ public class EnemyBirdSystem : EnemyStateMachine {
         //if (Instance == null) Instance = this;
 
         //enemy = enemyPrefab.GetComponent<Enemy>();
-        InitialEnemyPos = enemyPrefab.GetComponent<Enemy>().GetPosition();
+        InitialEnemyPos = enemyPrefab.GetComponent<EnemyBird>().GetPosition();
 
-        SetState(new IdleState(this));
+        SetState(new EnemyBirdIdleState(this));
     }
 }
 
-public class IdleState : EnemyState {
+public class EnemyBirdIdleState : EnemyState {
 
     float patrolDuration;
     float patrolCounter;
@@ -33,14 +33,14 @@ public class IdleState : EnemyState {
     Vector3 patrolDirNormalized; 
 
 
-    public IdleState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
+    public EnemyBirdIdleState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
     {
 
     }
 
     public override IEnumerator Start()
     {
-        patrolDuration = 2f; //seconds
+        patrolDuration = 1f; //seconds
         patrolWaitDuration = 2f; //seconds
 
         patrolTargetPosition = new Vector3(EnemyBirdSystem.InitialEnemyPos.x + UnityEngine.Random.Range(-2, 2), EnemyBirdSystem.InitialEnemyPos.y, EnemyBirdSystem.InitialEnemyPos.z + UnityEngine.Random.Range(-2, 2));
@@ -53,18 +53,19 @@ public class IdleState : EnemyState {
     {
         if (Vector3.Distance(Player.Instance.GetPosition(), EnemyBirdSystem.enemyPrefab.transform.position) < 45)
         {
-            EnemyBirdSystem.SetState(new ChasingState(EnemyBirdSystem));
+            EnemyBirdSystem.SetState(new EnemyBirdChasingState(EnemyBirdSystem));
         }
 
-        PatrolLost();
+        Patrol();
     }
 
-    public void PatrolLost()
+    public void Patrol()
     {
         patrolCounter += Time.deltaTime;
         if (patrolCounter < patrolDuration)
         {
             EnemyBirdSystem.enemyPrefab.transform.position = EnemyBirdSystem.enemyPrefab.transform.position + patrolDirNormalized * 7 * Player.CurrentSpeedIncrement * Time.deltaTime;
+            EnemyBirdSystem.enemyPrefab.transform.LookAt(patrolTargetPosition);
         }
         else
         {
@@ -72,7 +73,10 @@ public class IdleState : EnemyState {
             if (patrolWaitCounter > patrolWaitDuration)
             {
                 patrolTargetPosition = new Vector3(EnemyBirdSystem.InitialEnemyPos.x + UnityEngine.Random.Range(-2, 2), EnemyBirdSystem.InitialEnemyPos.y, EnemyBirdSystem.InitialEnemyPos.z + UnityEngine.Random.Range(-2, 2));
-                patrolDirNormalized = (EnemyBirdSystem.enemyPrefab.transform.position - patrolTargetPosition).normalized;
+
+                patrolDirNormalized = (patrolTargetPosition - EnemyBirdSystem.enemyPrefab.transform.position).normalized;
+
+                //Debug.Log("initianPos: "+ EnemyBirdSystem.InitialEnemyPos + " patrolTargetPosition: " + patrolTargetPosition + " patrolDirNormalized: " + patrolDirNormalized);
                 patrolWaitCounter = 0;
                 patrolCounter = 0;
             }
@@ -80,12 +84,12 @@ public class IdleState : EnemyState {
     }
 }
 
-public class ChasingState : EnemyState {
+public class EnemyBirdChasingState : EnemyState {
 
     Vector3 dirNormalized;
     Vector3 dirNormalizedHome;
 
-    public ChasingState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
+    public EnemyBirdChasingState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
     {
 
     }
@@ -106,7 +110,11 @@ public class ChasingState : EnemyState {
             //Debug.Log("d:" + Vector3.Distance(Player.Instance.GetPosition(), transform.position));
             if (Vector3.Distance(Player.Instance.GetPosition(), EnemyBirdSystem.enemyPrefab.transform.position) >= 50)
             {
-                EnemyBirdSystem.SetState(new LostState(EnemyBirdSystem));
+                EnemyBirdSystem.SetState(new EnemyBirdLostState(EnemyBirdSystem));
+            }
+            if (Vector3.Distance(Player.Instance.GetPosition(), EnemyBirdSystem.enemyPrefab.transform.position) < 20)
+            {
+                EnemyBirdSystem.SetState(new EnemyBirdPrepareChargeState(EnemyBirdSystem));
             }
             else
             {
@@ -118,7 +126,7 @@ public class ChasingState : EnemyState {
     }
 }
 
-public class LostState : EnemyState {
+public class EnemyBirdLostState : EnemyState {
 
     float time;
     float counter;
@@ -133,7 +141,7 @@ public class LostState : EnemyState {
     Vector3 patrolDirNormalized;
 
 
-    public LostState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
+    public EnemyBirdLostState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
     {
 
     }
@@ -155,12 +163,12 @@ public class LostState : EnemyState {
         counter += Time.deltaTime;
         if (counter > time)
         {
-            EnemyBirdSystem.SetState(new ReturningState(EnemyBirdSystem));
+            EnemyBirdSystem.SetState(new EnemyBirdReturningState(EnemyBirdSystem));
         }
 
         if (Vector3.Distance(Player.Instance.GetPosition(), EnemyBirdSystem.enemyPrefab.transform.position) < 45)
         {
-            EnemyBirdSystem.SetState(new ChasingState(EnemyBirdSystem));
+            EnemyBirdSystem.SetState(new EnemyBirdChasingState(EnemyBirdSystem));
         }
 
         PatrolLost();
@@ -168,31 +176,33 @@ public class LostState : EnemyState {
 
     public void PatrolLost()
     {
-        patrolDirNormalized = (EnemyBirdSystem.enemyPrefab.transform.position - patrolTargetPosition).normalized;
-
         patrolCounter += Time.deltaTime;
-        if(patrolCounter < patrolDuration)
+        if (patrolCounter < patrolDuration)
         {
             EnemyBirdSystem.enemyPrefab.transform.position = EnemyBirdSystem.enemyPrefab.transform.position + patrolDirNormalized * 7 * Player.CurrentSpeedIncrement * Time.deltaTime;
         }
         else
         {
             patrolWaitCounter += Time.deltaTime;
-            if(patrolWaitCounter > patrolWaitDuration)
+            if (patrolWaitCounter > patrolWaitDuration)
             {
-                patrolTargetPosition = new Vector3(initialPos.x + UnityEngine.Random.Range(-2, 2), initialPos.y, initialPos.z + UnityEngine.Random.Range(-2, 2));
+                patrolTargetPosition = new Vector3(EnemyBirdSystem.InitialEnemyPos.x + UnityEngine.Random.Range(-2, 2), EnemyBirdSystem.InitialEnemyPos.y, EnemyBirdSystem.InitialEnemyPos.z + UnityEngine.Random.Range(-2, 2));
+
+                patrolDirNormalized = (patrolTargetPosition - EnemyBirdSystem.enemyPrefab.transform.position).normalized;
+
+                Debug.Log("initianPos: " + EnemyBirdSystem.InitialEnemyPos + " patrolTargetPosition: " + patrolTargetPosition + " patrolDirNormalized: " + patrolDirNormalized);
                 patrolWaitCounter = 0;
                 patrolCounter = 0;
             }
-        }     
+        }
     }
 }
 
-public class ReturningState : EnemyState {
+public class EnemyBirdReturningState : EnemyState {
 
     Vector3 dirNormalizedHome;
 
-    public ReturningState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
+    public EnemyBirdReturningState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
     {
 
     }
@@ -213,12 +223,80 @@ public class ReturningState : EnemyState {
 
         if (Vector3.Distance(EnemyBirdSystem.enemyPrefab.transform.position, EnemyBirdSystem.InitialEnemyPos) < 5)
         {
-            EnemyBirdSystem.SetState(new IdleState(EnemyBirdSystem));
+            EnemyBirdSystem.SetState(new EnemyBirdIdleState(EnemyBirdSystem));
         }
 
         if (Vector3.Distance(Player.Instance.GetPosition(), EnemyBirdSystem.enemyPrefab.transform.position) < 45)
         {
-            EnemyBirdSystem.SetState(new ChasingState(EnemyBirdSystem));
+            EnemyBirdSystem.SetState(new EnemyBirdChasingState(EnemyBirdSystem));
         }
+    }
+}
+
+public class EnemyBirdPrepareChargeState : EnemyState {
+
+    float counter;
+    float time;
+
+    public EnemyBirdPrepareChargeState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
+    {
+        time = 1.5f;
+    }
+
+    public override IEnumerator Start()
+    {
+        while (counter <= time)
+        {
+            counter += Time.deltaTime / time;
+
+            // turn red
+            EnemyBirdSystem.enemyPrefab.GetComponent<EnemyBird>().TurnRed();
+
+            // look at Player direction
+
+
+            yield return null;
+        }
+
+        // change to charge
+        EnemyBirdSystem.SetState(new EnemyBirdChargeState(EnemyBirdSystem));
+    }
+}
+
+public class EnemyBirdChargeState : EnemyState {
+
+    Vector3 playerPredictPos;
+    Vector3 dirPredict;
+    float counter;
+    float time;
+
+    public EnemyBirdChargeState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
+    {
+        time = 3f;
+    }
+
+    public override IEnumerator Start()
+    {
+        playerPredictPos = Player.Instance.GetPredictedPosition();
+
+        Vector3 d = EnemyBirdSystem.enemyPrefab.transform.position - playerPredictPos;
+        d = EnemyBirdSystem.enemyPrefab.transform.position - d * 3f;
+
+        while (counter <= time)
+        {
+            counter += Time.deltaTime / time;
+
+            // move to Player predicted position
+            dirPredict = (d - EnemyBirdSystem.enemyPrefab.transform.position).normalized;
+
+            //EnemyBirdSystem.enemyPrefab.transform.position = d;
+            EnemyBirdSystem.enemyPrefab.transform.position = EnemyBirdSystem.enemyPrefab.transform.position + dirPredict * 21 * Player.CurrentSpeedIncrement * Time.deltaTime;
+            EnemyBirdSystem.enemyPrefab.transform.LookAt(d);
+
+            yield return null;
+        }
+
+        // change to charge
+        EnemyBirdSystem.enemyPrefab.GetComponent<EnemyBird>().Die();
     }
 }

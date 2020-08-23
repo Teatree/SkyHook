@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4755808273393939177}
   - component: {fileID: 4755808273393939176}
   - component: {fileID: 1545958871987343423}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: HomeBeacon
   m_TagString: Untagged
   m_Icon: {fileID: 0}

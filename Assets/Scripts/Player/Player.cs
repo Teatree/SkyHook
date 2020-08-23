@@ -6,6 +6,8 @@ using UnityEngine;
 public class Player : SceneSingleton<Player> {
     public static float CurrentSpeedIncrement = 1f;
 
+    public float Health;
+
     public int CoinsAmountTotal;
     public float OrbitDistance = 5.0f;
     public float IntitialSpeed = 0.5f;
@@ -14,6 +16,7 @@ public class Player : SceneSingleton<Player> {
     public GameObject PickUpParticle;
     public Transform ShipTransform;
     public GameObject CompassArrow; //Temporary
+    public GameObject DirectionIndicator; 
 
     Vector3 spawnPosition;
     float counter;
@@ -22,6 +25,7 @@ public class Player : SceneSingleton<Player> {
     public void Start()
     {
         spawnPosition = transform.position;
+        Health = 100;
     }
 
     public void Update()
@@ -32,7 +36,17 @@ public class Player : SceneSingleton<Player> {
         {
             CurrentSpeedIncrement += 0.03f;
             counter = 0;
-        }
+        }    
+    }
+
+    public void UpdateDirecionIndicator(Vector3 dir)
+    {
+        Vector3 lookAtPos = transform.position + dir;
+        lookAtPos.y = transform.position.y;
+
+        transform.LookAt(lookAtPos);
+        DirectionIndicator.transform.LookAt(lookAtPos);
+        DirectionIndicator.transform.eulerAngles = new Vector3(0, DirectionIndicator.transform.eulerAngles.y, DirectionIndicator.transform.eulerAngles.z);
     }
 
     public void CollideWithItem(GameObject g)
@@ -44,6 +58,11 @@ public class Player : SceneSingleton<Player> {
     public Vector3 GetPosition()
     {
         return ShipTransform.position;
+    }
+
+    public Vector3 GetPredictedPosition()
+    {
+        return transform.position - transform.forward * -10f;
     }
 
     public Vector3 GetHomePositionRange()
@@ -78,6 +97,27 @@ public class Player : SceneSingleton<Player> {
     {
         GameSystem.Instance.SetState(new DeadState(GameSystem.Instance));
         Destroy(gameObject);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        Health -= damage;
+
+        CheckIfDead();
+    }
+
+    void CheckIfDead()
+    {
+        if (Health <= 0)
+        {
+            OnTriggerDead();
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(GetPredictedPosition(), 0.4f);
     }
 }
 

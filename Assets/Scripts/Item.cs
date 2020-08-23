@@ -9,6 +9,8 @@ public class Item : MonoBehaviour
 
     IEnumerator HooKMeCouroutine;
     IEnumerator FallCoroutine;
+
+    Vector3 InitialPositon;
     bool isMovingUpwards = false;
 
     private void Start()
@@ -66,6 +68,7 @@ public class Item : MonoBehaviour
         if (Physics.Raycast(transform.position, Vector3.down, out hit, 90, LayerMask.GetMask("Terrain")))
         {
             transform.position = new Vector3(hit.point.x, hit.point.y + 2, hit.point.z);
+            InitialPositon = transform.position;
         }
 
         counter = 0;
@@ -75,18 +78,19 @@ public class Item : MonoBehaviour
     {
         Debug.Log("moving?");
         float counter = 0;
-        while (counter < time)
+        while (counter <= time)
         {
             counter += Time.deltaTime / time;
            
             //somewhere here we will also need to figure out interseption course for moving hookables
-            Vector3 newTargetPos = Vector3.Lerp(transform.position, Player.Instance.GetPosition(), counter);
+            Vector3 newTargetPos = Vector3.Lerp(InitialPositon, Player.Instance.GetPosition(), counter);
             transform.position = newTargetPos;
 
             yield return null;
         }
 
         Destroy(gameObject);
+        Player.Instance.OnTriggerEnt();
 
         counter = 0;
     }
