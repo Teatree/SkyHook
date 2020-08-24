@@ -227,7 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapWidthInTiles: 3
-  mapDepthInTiles: 3
+  mapDepthInTiles: 2
   lacunarity: 8
   persistence: 0.305
   numOfWaves: 5
@@ -2319,7 +2319,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 991227838}
-  m_Mesh: {fileID: 9197779781980398187, guid: b2f7b35fda38e254eba7ef0cf18995b1, type: 3}
+  m_Mesh: {fileID: 9197779781980398187, guid: 6f8af043ebff62748b98bf9381382e41, type: 3}
 --- !u!1001 &1017723985
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -76,8 +76,9 @@ public class Item : MonoBehaviour
 
     IEnumerator MoveUpdwardsToPlayer(float time)
     {
-        Debug.Log("moving?");
+        // Debug.Log("moving?");
         float counter = 0;
+        
         while (counter <= time)
         {
             counter += Time.deltaTime / time;
