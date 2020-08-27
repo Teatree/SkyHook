@@ -28,10 +28,13 @@ public class EnemyBirdIdleState : EnemyState {
     float patrolDuration;
     float patrolCounter;
     float patrolWaitDuration;
-    float patrolWaitCounter;
+    float patrolWaitCounter = 0;
     Vector3 patrolTargetPosition;
-    Vector3 patrolDirNormalized; 
+    Vector3 patrolDirNormalized;
 
+    Vector3 oldPos;
+    Vector3 newPos;
+    public Vector3 rotationPivot;
 
     public EnemyBirdIdleState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
     {
@@ -41,7 +44,7 @@ public class EnemyBirdIdleState : EnemyState {
     public override IEnumerator Start()
     {
         patrolDuration = 1f; //seconds
-        patrolWaitDuration = 2f; //seconds
+        patrolWaitDuration = 5f; //seconds
 
         patrolTargetPosition = new Vector3(EnemyBirdSystem.InitialEnemyPos.x + UnityEngine.Random.Range(-2, 2), EnemyBirdSystem.InitialEnemyPos.y, EnemyBirdSystem.InitialEnemyPos.z + UnityEngine.Random.Range(-2, 2));
         patrolDirNormalized = (EnemyBirdSystem.enemyPrefab.transform.position - patrolTargetPosition).normalized;
@@ -62,14 +65,23 @@ public class EnemyBirdIdleState : EnemyState {
     public void Patrol()
     {
         patrolCounter += Time.deltaTime;
+
+        // old pos
+        oldPos = EnemyBirdSystem.enemyPrefab.transform.position;
+
         if (patrolCounter < patrolDuration)
         {
             EnemyBirdSystem.enemyPrefab.transform.position = EnemyBirdSystem.enemyPrefab.transform.position + patrolDirNormalized * 7 * Player.CurrentSpeedIncrement * Time.deltaTime;
-            EnemyBirdSystem.enemyPrefab.transform.LookAt(patrolTargetPosition);
+            //EnemyBirdSystem.enemyPrefab.transform.LookAt(patrolTargetPosition);
         }
         else
         {
+            if (patrolWaitCounter <= 0.1f) rotationPivot = EnemyBirdSystem.enemyPrefab.transform.position - EnemyBirdSystem.enemyPrefab.transform.forward * 3;
+
             patrolWaitCounter += Time.deltaTime;
+
+            EnemyBirdSystem.enemyPrefab.transform.RotateAround(rotationPivot, Vector3.up, 90 * Time.deltaTime);
+
             if (patrolWaitCounter > patrolWaitDuration)
             {
                 patrolTargetPosition = new Vector3(EnemyBirdSystem.InitialEnemyPos.x + UnityEngine.Random.Range(-2, 2), EnemyBirdSystem.InitialEnemyPos.y, EnemyBirdSystem.InitialEnemyPos.z + UnityEngine.Random.Range(-2, 2));
@@ -81,6 +93,14 @@ public class EnemyBirdIdleState : EnemyState {
                 patrolCounter = 0;
             }
         }
+
+        // new pos
+        newPos = EnemyBirdSystem.enemyPrefab.transform.position;
+        Vector3 dir = (oldPos - newPos).normalized;
+        // look at
+        Vector3 lookAtter = oldPos - dir * 2;
+        EnemyBirdSystem.enemyPrefab.transform.LookAt(lookAtter);
+        Debug.Log("new:" + newPos + " old: " + oldPos);
     }
 }
 
@@ -140,6 +160,9 @@ public class EnemyBirdLostState : EnemyState {
     Vector3 patrolTargetPosition;
     Vector3 patrolDirNormalized;
 
+    Vector3 oldPos;
+    Vector3 newPos;
+    public Vector3 rotationPivot;
 
     public EnemyBirdLostState(EnemyBirdSystem enemyBirdSystem) : base(enemyBirdSystem)
     {
@@ -177,24 +200,42 @@ public class EnemyBirdLostState : EnemyState {
     public void PatrolLost()
     {
         patrolCounter += Time.deltaTime;
+
+        // old pos
+        oldPos = EnemyBirdSystem.enemyPrefab.transform.position;
+
         if (patrolCounter < patrolDuration)
         {
             EnemyBirdSystem.enemyPrefab.transform.position = EnemyBirdSystem.enemyPrefab.transform.position + patrolDirNormalized * 7 * Player.CurrentSpeedIncrement * Time.deltaTime;
+            //EnemyBirdSystem.enemyPrefab.transform.LookAt(patrolTargetPosition);
         }
         else
         {
+            if (patrolWaitCounter <= 0.1f) rotationPivot = EnemyBirdSystem.enemyPrefab.transform.position - EnemyBirdSystem.enemyPrefab.transform.forward * 3;
+
             patrolWaitCounter += Time.deltaTime;
+
+            EnemyBirdSystem.enemyPrefab.transform.RotateAround(rotationPivot, Vector3.up, 90 * Time.deltaTime);
+
             if (patrolWaitCounter > patrolWaitDuration)
             {
                 patrolTargetPosition = new Vector3(EnemyBirdSystem.InitialEnemyPos.x + UnityEngine.Random.Range(-2, 2), EnemyBirdSystem.InitialEnemyPos.y, EnemyBirdSystem.InitialEnemyPos.z + UnityEngine.Random.Range(-2, 2));
 
                 patrolDirNormalized = (patrolTargetPosition - EnemyBirdSystem.enemyPrefab.transform.position).normalized;
 
-                Debug.Log("initianPos: " + EnemyBirdSystem.InitialEnemyPos + " patrolTargetPosition: " + patrolTargetPosition + " patrolDirNormalized: " + patrolDirNormalized);
+                //Debug.Log("initianPos: "+ EnemyBirdSystem.InitialEnemyPos + " patrolTargetPosition: " + patrolTargetPosition + " patrolDirNormalized: " + patrolDirNormalized);
                 patrolWaitCounter = 0;
                 patrolCounter = 0;
             }
         }
+
+        // new pos
+        newPos = EnemyBirdSystem.enemyPrefab.transform.position;
+        Vector3 dir = (oldPos - newPos).normalized;
+        // look at
+        Vector3 lookAtter = oldPos - dir * 2;
+        EnemyBirdSystem.enemyPrefab.transform.LookAt(lookAtter);
+        Debug.Log("new:" + newPos + " old: " + oldPos);
     }
 }
 

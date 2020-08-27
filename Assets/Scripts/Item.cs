@@ -13,6 +13,26 @@ public class Item : MonoBehaviour
     Vector3 InitialPositon;
     bool isMovingUpwards = false;
 
+    //public float speed = 200;
+    //public float scaleX = 10;
+    //public float scaleZ = 15;
+    //public float offsetX = 0;
+    //public float offsetZ = 0;
+    //
+    //public bool isLinkOffsetScalePositiveX = false;
+    //public bool isLinkOffsetScaleNegativeX = false;
+    //public bool isLinkOffsetScalePositiveZ = false;
+    //public bool isLinkOffsetScaleNegativeZ = false;
+    //public bool isFigure8 = true;
+    //
+    //private float phase;
+    //private float m_2PI = Mathf.PI * 2;
+    //private Vector3 originalPosition;
+    //private Vector3 pivot;
+    //private Vector3 pivotOffset;
+    //private bool isInverted = false;
+    //private bool isRunning = false;
+
     private void Start()
     {
         // place on the floor
@@ -21,6 +41,19 @@ public class Item : MonoBehaviour
         //{
         //    transform.position = new Vector3(hit.point.x, hit.point.y + 2, hit.point.z);
         //}
+
+        //pivot = transform.position;
+        //originalPosition = transform.position;
+        //isRunning = true;
+        //
+        //if (isLinkOffsetScalePositiveX)
+        //    phase = 3.14f / 2f + 3.14f;
+        //else if (isLinkOffsetScaleNegativeX)
+        //    phase = 3.14f / 2f;
+        //else if (isLinkOffsetScalePositiveZ)
+        //    phase = 3.14f;
+        //else
+        //    phase = 0;
     }
 
     private void Update()
@@ -51,6 +84,28 @@ public class Item : MonoBehaviour
                 }
             }
         }
+
+        //pivotOffset = Vector3.forward * 2 * scaleZ;
+
+        //phase += speed * 2 * Time.deltaTime;
+
+        //if (isFigure8)
+        //{
+        //    if (phase > m_2PI)
+        //    {
+        //        Debug.Log("phase " + phase + " over 2pi: " + isInverted);
+        //        isInverted = !isInverted;
+        //        phase -= m_2PI;
+        //    }
+        //    if (phase < 0)
+        //    {
+        //        Debug.Log("phase " + phase + " under 0");
+        //        phase += m_2PI;
+        //    }
+        //}
+
+        //Vector3 nextPosition = pivot + (isInverted ? pivotOffset : Vector3.zero);
+        //transform.position = new Vector3(nextPosition.x + Mathf.Sin(phase) * scaleX + offsetX, nextPosition.y, nextPosition.z + Mathf.Cos(phase) * (isInverted ? -1 : 1) * scaleZ + offsetZ);
     }
 
     IEnumerator FallDown(float time)
