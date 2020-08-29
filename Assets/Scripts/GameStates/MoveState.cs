@@ -38,7 +38,8 @@ public class MoveState : State {
         Player.Instance.UpdateDirecionIndicator(dir);
 
         // Constantly move Player at a consistent speed in the direction
-        Player.Instance.transform.Translate(Vector3.forward * 10 * Player.CurrentSpeedIncrement * Time.deltaTime, Space.Self);
+        float fuelMultiplier = Player.Instance.Fuel > 0 ? 1 : 0.5f;
+        Player.Instance.transform.Translate(Vector3.forward * 10 * fuelMultiplier * Player.CurrentSpeedIncrement * Time.deltaTime, Space.Self);
 
         // Update Camera's position to follow
         Camera.main.transform.position = new Vector3(Player.Instance.transform.position.x, 120, Player.Instance.transform.position.z - 90);

@@ -13,12 +13,15 @@ public class Item : MonoBehaviour
 
     Vector3 InitialPositon;
     bool isMovingUpwards = false;
+    ItemWorld thisItem;
 
     private void Start()
     {
         int r = Random.RandomRange(0, itemWorld.Length-1);
-        transform.gameObject.name = itemWorld[r].name;
-        transform.GetComponent<MeshFilter>().mesh = itemWorld[r].mesh;
+        thisItem = itemWorld[r];
+
+        transform.gameObject.name = thisItem.name;
+        transform.GetComponent<MeshFilter>().mesh = thisItem.mesh;
 
         // place on the floor
         //RaycastHit hit;
@@ -96,6 +99,7 @@ public class Item : MonoBehaviour
             yield return null;
         }
 
+        Player.Instance.AddItem(thisItem);
         Destroy(gameObject);
         Player.Instance.OnTriggerEnt();
 

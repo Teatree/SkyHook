@@ -15,3 +15,4 @@ MonoBehaviour:
   name: Coconut
   rarity: 0
   mesh: {fileID: 4300000, guid: fb82fcf142e96f04a9a722bb06351c64, type: 3}
+  icon: {fileID: 21300008, guid: 37607ec1aab56e349af84a980f685a4b, type: 3}

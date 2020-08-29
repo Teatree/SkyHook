@@ -36,6 +36,8 @@ public class FinishedState : State {
             yield return null;
         }
 
+        Player.Instance.DeclareYourItems();
+
         //GameSystem.SetState(new IdleState(GameSystem));
 
         counter = 0;
