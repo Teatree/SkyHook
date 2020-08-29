@@ -23,6 +23,8 @@ public class MoveState : State {
         //terrible
         //LevelSystem.Instance.ResetMoveCounter();
 
+        //AudioSystem.Instance.PlaySong();
+
         yield return null;
     }
 

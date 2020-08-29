@@ -100,7 +100,7 @@ public class EnemyBirdIdleState : EnemyState {
         // look at
         Vector3 lookAtter = oldPos - dir * 2;
         EnemyBirdSystem.enemyPrefab.transform.LookAt(lookAtter);
-        Debug.Log("new:" + newPos + " old: " + oldPos);
+        //Debug.Log("new:" + newPos + " old: " + oldPos);
     }
 }
 
