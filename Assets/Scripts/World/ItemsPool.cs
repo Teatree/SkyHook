@@ -7,7 +7,7 @@ public class ItemsPool : SceneSingleton<ItemsPool>
     public GameObject treePrefab;
     public GameObject bushPrefab;
 
-    public int poolSize = 42;
+    public int poolSize = 142;
     public List<GameObject> items;
 
     void Start()

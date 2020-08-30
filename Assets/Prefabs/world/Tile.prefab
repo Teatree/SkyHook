@@ -98,6 +98,9 @@ MonoBehaviour:
   meshFilter: {fileID: 7056696702166676708}
   mainTerrainTypes: []
   secondaryTerrainTypes: []
+  distanceBetweenProps: 2
+  poissonRejectAfter: 3
+  propsOnTileAmount: 5
 --- !u!114 &5141055208451106441
 MonoBehaviour:
   m_ObjectHideFlags: 0

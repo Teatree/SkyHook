@@ -71,33 +71,14 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         //{
         //    showDictionariesInEditor();
         //}
-
-        //if (PlayerBehaviour.Instance.GetState() == PlayerState.launched)
-        //{
-
-        RaycastHit hit;
-        if (Physics.Raycast(Player.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
-        {
-            checkAndExtendMap(hit.collider.gameObject);
-            removeOldTiles(hit.collider.GetComponent<TileCmponent>().indexX,
-                hit.collider.GetComponent<TileCmponent>().indexZ);
-        }
-
-        //    newBiomeTimer += Time.deltaTime;
-        //    if (newBiomeTimer >= changeBiomeInSec)
-        //    {
-        //        getNewBiome = true;
-        //        newBiomeTimer = 0;
-        //    }
-        //}
-
-        if (Input.GetKeyDown("up"))
-        {
-            Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
-            b.heightMultiplier = currentHeightMultiplier;
-            GenerateMap(0, 0, mapWidthInTiles, mapDepthInTiles);
-            // ExtendMap(0, 0, tilesList[0], b);
-        }
+        
+        // RaycastHit hit;
+        // if (Physics.Raycast(Player.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
+        // {
+        //     checkAndExtendMap(hit.collider.gameObject);
+        //     removeOldTiles(hit.collider.GetComponent<TileCmponent>().indexX,
+        //         hit.collider.GetComponent<TileCmponent>().indexZ);
+        // }
     }
 
     private void checkAndExtendMap(GameObject currentTile)
@@ -110,13 +91,6 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
                                                minZPerRow[tc.indexX] == tc.indexZ - 1
                                                || tc.indexX + 1 == maxX || tc.indexX - 1 == minX)
         {
-            //if (getNewBiome)
-            //{
-            //    Biome b = biomes[UnityEngine.Random.Range(0, biomes.Count)];
-            //    b.heightMultiplier = currentHeightMultiplier;
-            //    ExtendMap(tc.indexX, tc.indexZ, currentTile, b);
-            //    getNewBiome = false;
-            //}
             ExtendMap(tc.indexX, tc.indexZ, currentTile, tc.biome);
         }
     }
@@ -202,36 +176,7 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
         t.GetComponent<TileCmponent>().setCoordinates(indexX, indexZ);
         t.GetComponent<TileCmponent>().biome = b;
         t.GetComponent<TileGeneration>().mainTerrainTypes = b.getTerrainTypes();
-
-
-        if (neighbours.ContainsKey("" + (indexX + 1) + indexZ) &&
-            neighbours["" + (indexX + 1) + indexZ].GetComponent<TileCmponent>().biome != b)
-        {
-            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
-                neighbours["" + (indexX + 1) + indexZ].GetComponent<TileGeneration>().mainTerrainTypes;
-        }
-
-        if (neighbours.ContainsKey("" + (indexX - 1) + indexZ) &&
-            neighbours["" + (indexX - 1) + indexZ].GetComponent<TileCmponent>().biome != b)
-        {
-            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
-                neighbours["" + (indexX - 1) + indexZ].GetComponent<TileGeneration>().mainTerrainTypes;
-        }
-
-        if (neighbours.ContainsKey("" + indexX + (indexZ - 1)) &&
-            neighbours["" + indexX + (indexZ - 1)].GetComponent<TileCmponent>().biome != b)
-        {
-            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
-                neighbours["" + indexX + (indexZ - 1)].GetComponent<TileGeneration>().mainTerrainTypes;
-        }
-
-        if (neighbours.ContainsKey("" + indexX + (indexZ + 1)) &&
-            neighbours["" + "" + indexX + (indexZ + 1)].GetComponent<TileCmponent>().biome != b)
-        {
-            t.GetComponent<TileGeneration>().secondaryTerrainTypes =
-                neighbours["" + indexX + (indexZ + 1)].GetComponent<TileGeneration>().mainTerrainTypes;
-        }
-
+        
         neighbours["" + indexX + indexZ] = t;
         tilesList.Add(t);
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 public static class PoissonDiscSampling
 {
-    public static List<Vector2> GeneratePoints(float radius, Vector2 sampleRegionSize, int tryBeforeReject = 10)
+    public static List<Vector2> GeneratePoints(float radius, Vector2 sampleRegionSize, int amountOfPointsToGenerate,
+        int tryBeforeReject = 10)
     {
         float cellSize = radius / Mathf.Sqrt(2);
         int[,] grid = new int[Mathf.CeilToInt(sampleRegionSize.x / cellSize),
@@ -21,7 +22,7 @@ public static class PoissonDiscSampling
             bool isAccepted = false;
             for (int i = 0; i < tryBeforeReject; i++)
             {
-                float angle = Random.value * Mathf.PI * 2; 
+                float angle = Random.value * Mathf.PI * 2;
                 Vector2 dir = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle));
                 Vector2 candidate = spawnCenter + dir * Random.Range(radius, 2 * radius);
                 if (IsValid(candidate, sampleRegionSize, cellSize, radius, points, grid))
@@ -34,6 +35,12 @@ public static class PoissonDiscSampling
                 }
             }
 
+            if (points.Count == amountOfPointsToGenerate)
+            {
+                Debug.Log("Enough poit s ! " + points.Count);
+                return points;
+            }
+
             if (!isAccepted)
             {
                 spawnPoints.RemoveAt(spawnIndex);
@@ -43,7 +50,8 @@ public static class PoissonDiscSampling
         return points;
     }
 
-    public static  bool IsValid(Vector2 candidate, Vector2 sampleRegionSIze, float cellSize, float radius,  List<Vector2> points, int[,] grid)
+    public static bool IsValid(Vector2 candidate, Vector2 sampleRegionSIze, float cellSize, float radius,
+        List<Vector2> points, int[,] grid)
     {
         if (candidate.x >= 0 && candidate.x < sampleRegionSIze.x &&
             candidate.y >= 0 && candidate.y < sampleRegionSIze.y)
@@ -51,12 +59,12 @@ public static class PoissonDiscSampling
             int cellX = (int) (candidate.x / cellSize);
             int cellY = (int) (candidate.y / cellSize);
 
-            int searchStartX= Mathf.Max(0, cellX - 2);
-            int searchEndX = Mathf.Min(cellX + 2, grid.GetLength(0)-1);
-            
-            
+            int searchStartX = Mathf.Max(0, cellX - 2);
+            int searchEndX = Mathf.Min(cellX + 2, grid.GetLength(0) - 1);
+
+
             int searchStartY = Mathf.Max(0, cellY - 2);
-            int searchEndY = Mathf.Min(cellY + 2, grid.GetLength(1)-1);
+            int searchEndY = Mathf.Min(cellY + 2, grid.GetLength(1) - 1);
 
             float sqrRadius = radius * radius;
             for (int x = searchStartX; x < searchEndX; x++)
