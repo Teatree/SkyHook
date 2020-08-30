@@ -67,18 +67,18 @@ public class TerrainGenerator : SceneSingleton<TerrainGenerator>
 
     private void Update()
     {
-        //if (Application.isEditor)
-        //{
-        //    showDictionariesInEditor();
-        //}
+        if (Application.isEditor)
+        {
+            showDictionariesInEditor();
+        }
         
-        // RaycastHit hit;
-        // if (Physics.Raycast(Player.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
-        // {
-        //     checkAndExtendMap(hit.collider.gameObject);
-        //     removeOldTiles(hit.collider.GetComponent<TileCmponent>().indexX,
-        //         hit.collider.GetComponent<TileCmponent>().indexZ);
-        // }
+         RaycastHit hit;
+         if (Physics.Raycast(Player.Instance.transform.position, Vector3.down, out hit, 90, raycastLayerMask))
+         {
+             checkAndExtendMap(hit.collider.gameObject);
+             removeOldTiles(hit.collider.GetComponent<TileCmponent>().indexX,
+                 hit.collider.GetComponent<TileCmponent>().indexZ);
+         }
     }
 
     private void checkAndExtendMap(GameObject currentTile)

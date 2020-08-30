@@ -37,7 +37,6 @@ public static class PoissonDiscSampling
 
             if (points.Count == amountOfPointsToGenerate)
             {
-                Debug.Log("Enough poit s ! " + points.Count);
                 return points;
             }
 
